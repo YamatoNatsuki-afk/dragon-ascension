@@ -1,28 +1,29 @@
-# data/checkpoints/CheckpointDefinition.gd
-# Resource configurable en el editor. Define QUÉ pasa en un checkpoint.
-# No contiene lógica — eso lo hace CheckpointSystem.
+# res://data/checkpoints/CheckpointDefinition.gd
+# Resource que define un checkpoint: qué día se activa y qué outcomes produce.
+# UN SOLO class_name por archivo — CheckpointOutcome está en su propio archivo.
 class_name CheckpointDefinition
 extends Resource
 
 @export var id: StringName
-@export var trigger_day: int         # Día exacto en que se evalúa
-@export var display_name: String     # "El Primer Mes"
+@export var trigger_day: int
+@export var display_name: String
 
-# Texto narrativo por resultado — claves para localización futura
-@export var narrative_exceptional: String = ""
-@export var narrative_high: String        = ""
-@export var narrative_normal: String      = ""
-@export var narrative_low: String         = ""
+# Array de CheckpointOutcome. CheckpointSystem elige el de min_grade más alto que aplique.
+# Configúralos como sub-recursos en el Inspector del editor.
+@export var outcomes: Array[CheckpointOutcome] = []
 
-# Recompensas por rendimiento alto/excepcional (aplicadas vía EventBus)
-@export var reward_high_stat: StringName  = &""
-@export var reward_high_amount: float     = 0.0
-
-# Penalización por rendimiento bajo
-@export var penalty_low_stat: StringName  = &""
-@export var penalty_low_amount: float     = 0.0
-
-# Si true, el checkpoint bloquea el avance hasta que el jugador
-# alcance un score mínimo. Para Fase 1 déjalo en false.
-@export var is_blocking: bool = false
+# Si true, el run no puede continuar hasta alcanzar min_score_to_pass.
+# Mantener en false durante el prototipo.
+@export var is_blocking: bool        = false
 @export var min_score_to_pass: float = 0.0
+
+## Devuelve el outcome apropiado para el grade recibido.
+## Elige el de min_grade más alto que sea <= al grade del jugador.
+## Si ninguno aplica (array vacío), devuelve null — CheckpointSystem maneja el fallback.
+func get_outcome_for_grade(grade: PerformanceEvaluator.Grade) -> CheckpointOutcome:
+	var best: CheckpointOutcome = null
+	for outcome: CheckpointOutcome in outcomes:
+		if outcome.min_grade <= int(grade):
+			if best == null or outcome.min_grade > best.min_grade:
+				best = outcome
+	return best

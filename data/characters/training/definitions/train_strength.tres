@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3 uid="uid://train_strength"]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1_str"]
+
+[resource]
+script = ExtResource("1_str")
+id = &"train_strength"
+display_name = "Entrenamiento de fuerza"
+description = "Pesas, resistencia física, explosión muscular. El camino del guerrero de contacto."
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.2
+target_stats = [&"strength"]
+base_gain = 2.0
+energy_cost = 1

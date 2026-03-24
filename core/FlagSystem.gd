@@ -25,7 +25,7 @@ signal flag_cleared(flag_id: StringName)
 ## Establece un flag. Emite flag_set.
 ## value puede ser bool, int, float o String.
 func set_flag(flag_id: StringName, value: Variant = true) -> void:
-	var prev := _flags.get(flag_id, null)
+	var prev: Variant = _flags.get(flag_id, null)
 	_flags[flag_id] = value
 	_history.append({
 		"flag":  flag_id,
@@ -57,7 +57,7 @@ func reset() -> void:
 
 ## Comprueba si un flag existe y es truthy.
 func has(flag_id: StringName) -> bool:
-	var val := _flags.get(flag_id, false)
+	var val: Variant = _flags.get(flag_id, false)
 	# bool false, int 0, float 0.0 y String "" = falsy
 	match typeof(val):
 		TYPE_BOOL:   return val

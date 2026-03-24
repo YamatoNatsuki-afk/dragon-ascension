@@ -107,7 +107,7 @@ static func _score_intention(data: CharacterData, profile: BuildProfile) -> floa
 		score += clampf(1.0 - (w / profile.threshold_high), 0.0, 1.0)
 		checks += 1
 
-	return score / max(1, checks)
+	return score / float(maxi(1, checks))
 
 static func _score_execution(data: CharacterData, profile: BuildProfile) -> float:
 	# Normalizar stats: convertir a proporciones relativas al total
@@ -134,7 +134,7 @@ static func _score_execution(data: CharacterData, profile: BuildProfile) -> floa
 		score += clampf(1.0 - (proportion / 0.20), 0.0, 1.0)
 		checks += 1
 
-	return score / max(1, checks)
+	return score / float(maxi(1, checks))
 
 # ─────────────────────────────────────────────
 # Carga de perfiles
@@ -144,18 +144,69 @@ static func _ensure_profiles_loaded() -> void:
 	if _profiles_loaded:
 		return
 	_profiles.clear()
+
 	var dir := DirAccess.open(PROFILES_PATH)
-	if dir == null:
-		push_error("BuildAnalyzer: carpeta '%s' no encontrada." % PROFILES_PATH)
-		_profiles_loaded = true
-		return
-	dir.list_dir_begin()
-	var entry := dir.get_next()
-	while entry != "":
-		if entry.ends_with(".tres"):
-			var res := load(PROFILES_PATH + entry)
-			if res is BuildProfile:
-				_profiles.append(res)
-		entry = dir.get_next()
-	dir.list_dir_end()
+	if dir != null:
+		dir.list_dir_begin()
+		var entry := dir.get_next()
+		while entry != "":
+			if entry.ends_with(".tres"):
+				var res := load(PROFILES_PATH + entry)
+				if res is BuildProfile:
+					_profiles.append(res)
+			entry = dir.get_next()
+		dir.list_dir_end()
+
+	if _profiles.is_empty():
+		push_warning("BuildAnalyzer: sin perfiles en disco. Usando perfiles por código.")
+		_load_fallback_profiles()
+
 	_profiles_loaded = true
+
+## Perfiles base creados en código.
+## Se activan cuando no hay .tres en data/analysis/profiles/.
+## Añadir un .tres a esa carpeta lo reemplaza automáticamente en el siguiente arranque.
+static func _load_fallback_profiles() -> void:
+	# ── Striker ───────────────────────────────
+	var striker          := BuildProfile.new()
+	striker.id            = &"striker"
+	striker.display_name  = "Striker"
+	striker.description   = "Fuerza y velocidad. Golpea rápido, golpea fuerte."
+	striker.required_high_stats = [&"strength", &"speed"]
+	striker.penalized_stats     = [&"ki_max"]
+	striker.threshold_high      = 0.7
+	striker.profile_color       = Color(0.9, 0.2, 0.1)
+	_profiles.append(striker)
+
+	# ── Ki User ───────────────────────────────
+	var ki_user          := BuildProfile.new()
+	ki_user.id            = &"ki_user"
+	ki_user.display_name  = "Ki User"
+	ki_user.description   = "Ki y velocidad. El camino de las técnicas de energía."
+	ki_user.required_high_stats = [&"ki_max", &"speed"]
+	ki_user.penalized_stats     = [&"strength"]
+	ki_user.threshold_high      = 0.7
+	ki_user.profile_color       = Color(0.1, 0.5, 1.0)
+	_profiles.append(ki_user)
+
+	# ── Tank ──────────────────────────────────
+	var tank             := BuildProfile.new()
+	tank.id               = &"tank"
+	tank.display_name     = "Tank"
+	tank.description      = "Defensa y vida. Imposible de derribar."
+	tank.required_high_stats = [&"defense", &"health_max"]
+	tank.penalized_stats     = [&"speed"]
+	tank.threshold_high      = 0.7
+	tank.profile_color       = Color(0.4, 0.8, 0.3)
+	_profiles.append(tank)
+
+	# ── Balanced ──────────────────────────────
+	var balanced          := BuildProfile.new()
+	balanced.id            = &"balanced"
+	balanced.display_name  = "Balanced"
+	balanced.description   = "Sin especialización clara. Versátil pero sin pico dominante."
+	balanced.required_high_stats = []   # Ninguno requerido — score neutro siempre
+	balanced.penalized_stats     = []
+	balanced.threshold_high      = 0.5
+	balanced.profile_color       = Color(0.7, 0.7, 0.7)
+	_profiles.append(balanced)

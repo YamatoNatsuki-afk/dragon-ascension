@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RaceDefinition" format=3 uid="uid://namekian_race_def"]
+
+[ext_resource type="Script" path="res://data/races/RaceDefinition.gd" id="1_namekian"]
+
+[resource]
+script = ExtResource("1_namekian")
+id = &"namekian"
+display_name = "Namekiano"
+description = "Guerreros espirituales. Ki máximo excepcional y defensa sólida. Su camino es la meditación y el control del ki."
+stat_multipliers = {
+&"defense": 1.2,
+&"health_max": 1.1,
+&"ki_max": 1.6,
+&"speed": 0.9,
+&"strength": 1.0
+}
+racial_traits = [&"ki_affinity", &"regeneration"]
+xp_multiplier = 1.0
+default_aura_color = Color(0.1, 0.9, 0.3, 1.0)

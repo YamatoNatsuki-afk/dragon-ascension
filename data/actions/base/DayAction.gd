@@ -1,6 +1,7 @@
-# data/actions/base/DayAction.gd
+# res://data/actions/base/DayAction.gd
 # Resource base para todas las acciones del día.
-# Cada subclase implementa execute() y opcionalmente is_available().
+# ARCHIVO CANÓNICO — el único con class_name DayAction.
+# Eliminar: res://data/characters/actions/DayAction.gd
 class_name DayAction
 extends Resource
 
@@ -11,14 +12,17 @@ extends Resource
 @export var unlock_day: int = 1
 @export var requires_unlock_flag: StringName = &""
 
-# Peso BASE de selección. El ActionSelector lo usa como punto de partida
-# antes de aplicar modificadores por build. Rango sugerido: 0.5 – 3.0.
-# 0.0 = nunca se elige por el selector automático (pero sí aparece en lista).
+# Peso BASE de selección. ActionSelector lo multiplica por afinidad de build.
+# 0.0 = nunca elegido automáticamente (pero visible en lista manual).
 @export var selection_weight: float = 1.0
 
+## ¿Puede el jugador elegir esta acción en el contexto actual?
+## Override en subclases para condiciones más complejas.
 func is_available(ctx: DayContext) -> bool:
 	return ctx.day_number >= unlock_day
 
+## Ejecuta la acción y devuelve su resultado.
+## NUNCA modifica CharacterData directamente — toda mutación va en el Result.
 func execute(_ctx: DayContext) -> DayActionResult:
 	push_error("DayAction '%s': execute() no implementado." % id)
 	return DayActionResult.new()

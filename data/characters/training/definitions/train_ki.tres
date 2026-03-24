@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3 uid="uid://train_ki"]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1_ki"]
+
+[resource]
+script = ExtResource("1_ki")
+id = &"train_ki"
+display_name = "Meditación de ki"
+description = "Concentración, respiración profunda, canalización de energía vital. El camino del guerrero espiritual."
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.2
+target_stats = [&"ki_max"]
+base_gain = 2.0
+energy_cost = 1

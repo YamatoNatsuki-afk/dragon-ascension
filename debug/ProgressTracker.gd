@@ -69,7 +69,7 @@ func print_milestone_report(day_number: int) -> void:
 	print("\n")
 	print("  ┌─────────────────────────────────────────┐")
 	print("  │  REPORTE — Días %d a %d" % [_period_start_day, day_number] \
-		+ " ".repeat(max(0, 24 - str(_period_start_day).length() - str(day_number).length())) + "│")
+		+ " ".repeat(maxi(0, 24 - str(_period_start_day).length() - str(day_number).length())) + "│")
 	print("  ├─────────────────────────────────────────┤")
 
 	# Stats ganados en el período
@@ -80,12 +80,11 @@ func print_milestone_report(day_number: int) -> void:
 			continue
 		has_changes = true
 		var sign    := "+" if delta >= 0.0 else ""
-		var current := _character_data.base_stats.get(stat_id, 0.0)
-		var start   := _period_start_stats.get(stat_id, current)
+		var current: float = _character_data.base_stats.get(stat_id, 0.0)
 		var trend   := _trend_arrow(delta)
 		print("  │  %-12s %s%-5.1f  (total: %.1f) %s" % [
 			stat_id, sign, delta, current, trend
-		] + " ".repeat(max(0, 3)) + "│")
+		] + " ".repeat(maxi(0, 3)) + "│")
 
 	if not has_changes:
 		print("  │  (sin cambios de stats en este período)  │")
@@ -93,11 +92,11 @@ func print_milestone_report(day_number: int) -> void:
 	print("  ├─────────────────────────────────────────┤")
 
 	# XP del período
-	var xp_rate := _period_xp / max(1, days_in_period)
+	var xp_rate: float = _period_xp / float(maxi(1, days_in_period))
 	print("  │  XP ganada:   %6.1f  (%.1f / día)" % [_period_xp, xp_rate] \
-		+ " " * max(0, 9 - str(int(_period_xp)).length()) + "│")
+		+ " ".repeat(maxi(0, 9 - str(int(_period_xp)).length())) + "│")
 	print("  │  XP total:    %6.1f" % _total_xp \
-		+ " " * 18 + "│")
+		+ " ".repeat(18) + "│")
 
 	# Proyección al día 100
 	if _days_tracked > 0 and _total_xp > 0.0:
@@ -105,7 +104,7 @@ func print_milestone_report(day_number: int) -> void:
 		var days_left      := 100 - day_number
 		var projected_xp   := _total_xp + xp_per_day_avg * days_left
 		print("  │  Proyección D100: ~%.0f XP" % projected_xp \
-			+ " " * max(0, 12 - str(int(projected_xp)).length()) + "│")
+			+ " ".repeat(maxi(0, 12 - str(int(projected_xp)).length())) + "│")
 
 	print("  └─────────────────────────────────────────┘")
 
@@ -114,7 +113,7 @@ func print_final_report(days_completed: int) -> void:
 	print("\n")
 	print("  ╔═════════════════════════════════════════╗")
 	print("  ║  RESUMEN FINAL — %d días" % days_completed \
-		+ " " * max(0, 22 - str(days_completed).length()) + "║")
+		+ " ".repeat(maxi(0, 22 - str(days_completed).length())) + "║")
 	print("  ╠═════════════════════════════════════════╣")
 	print("  ║  GANANCIAS TOTALES DE STATS:             ║")
 
@@ -123,15 +122,15 @@ func print_final_report(days_completed: int) -> void:
 		if abs(delta) < 0.01:
 			continue
 		var sign    := "+" if delta >= 0.0 else ""
-		var current := _character_data.base_stats.get(stat_id, 0.0)
+		var current: float = _character_data.base_stats.get(stat_id, 0.0)
 		print("  ║    %-12s %s%-6.1f → total %.1f" % [
 			stat_id, sign, delta, current
-		] + " " * max(0, 3) + "║")
+		] + " ".repeat(maxi(0, 3)) + "║")
 
-	var avg_xp := _total_xp / max(1, days_completed)
+	var avg_xp: float = _total_xp / float(maxi(1, days_completed))
 	print("  ╠═════════════════════════════════════════╣")
 	print("  ║  XP total:    %7.1f  (%.1f / día)" % [_total_xp, avg_xp] \
-		+ " " * max(0, 6 - str(int(_total_xp)).length()) + "║")
+		+ " ".repeat(maxi(0, 6 - str(int(_total_xp)).length())) + "║")
 	print("  ╚═════════════════════════════════════════╝")
 
 # ─────────────────────────────────────────────
@@ -179,12 +178,12 @@ func print_checkpoint_report(result: CheckpointResult) -> void:
 	print("\n")
 	print("  ╔══════════════════════════════════════════════╗")
 	print("  ║  CHECKPOINT — %s" % cp.display_name \
-		+ " ".repeat(max(0, 32 - cp.display_name.length())) + "║")
+		+ " ".repeat(maxi(0, 32 - cp.display_name.length())) + "║")
 	print("  ╠══════════════════════════════════════════════╣")
 	print("  ║  Rendimiento:  %-29s║" % grade)
 	print("  ║  Power score:  %-8.1f (esperado: %.1f)" % [
 		result.power_score, result.expected_score
-	] + " ".repeat(max(0, 7 - str(int(result.expected_score)).length())) + "║")
+	] + " ".repeat(maxi(0, 7 - str(int(result.expected_score)).length())) + "║")
 	print("  ║  Ratio:        %-6.0f%%" % (result.performance_ratio * 100.0) \
 		+ " ".repeat(23) + "║")
 	print("  ╠══════════════════════════════════════════════╣")
@@ -198,11 +197,11 @@ func print_checkpoint_report(result: CheckpointResult) -> void:
 		var s          : float        = entry.score
 		var bar                       := _mini_bar(s, 1.0, 10)
 		print("  ║    %-12s %s %.0f%%" % [p.display_name, bar, s * 100.0] \
-			+ " ".repeat(max(0, 8)) + "║")
+			+ " ".repeat(maxi(0, 8)) + "║")
 
 	print("  ╠══════════════════════════════════════════════╣")
 	print("  ║  \"%s\"" % result.narrative_text \
-		+ " ".repeat(max(0, 44 - result.narrative_text.length())) + "║")
+		+ " ".repeat(maxi(0, 44 - result.narrative_text.length())) + "║")
 
 	if not result.stat_delta.is_empty():
 		print("  ╠══════════════════════════════════════════════╣")
@@ -210,7 +209,7 @@ func print_checkpoint_report(result: CheckpointResult) -> void:
 			var d: float = result.stat_delta[stat_id]
 			var sign     := "+" if d >= 0.0 else ""
 			print("  ║  Consecuencia: %-12s %s%.1f" % [stat_id, sign, d] \
-				+ " ".repeat(max(0, 15)) + "║")
+				+ " ".repeat(maxi(0, 15)) + "║")
 
 	print("  ╚══════════════════════════════════════════════╝")
 

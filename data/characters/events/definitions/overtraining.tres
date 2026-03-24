@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="EventAction" format=3 uid="uid://overtraining"]
+
+[ext_resource type="Script" path="res://data/characters/events/EventAction.gd" id="1_ev"]
+[ext_resource type="Script" path="res://data/characters/actions/EventOutcome.gd" id="2_out"]
+
+[sub_resource type="Resource" id="out_injury"]
+script = ExtResource("2_out")
+narrative_key = "event.overtraining.injury"
+weight = 3.0
+stat_changes = {&"health_max": -8.0, &"strength": -0.5}
+xp_gained = 0.0
+extra_data = {}
+
+[sub_resource type="Resource" id="out_rest"]
+script = ExtResource("2_out")
+narrative_key = "event.overtraining.rest_forced"
+weight = 4.0
+stat_changes = {}
+xp_gained = 2.0
+extra_data = {}
+
+[sub_resource type="Resource" id="out_break"]
+script = ExtResource("2_out")
+narrative_key = "event.overtraining.breakthrough"
+weight = 1.0
+stat_changes = {&"health_max": 3.0}
+xp_gained = 15.0
+extra_data = {}
+
+[resource]
+script = ExtResource("1_ev")
+id = &"overtraining"
+display_name = "Sobreentrenamiento"
+description = "El cuerpo pide descanso. Ignorarlo tiene consecuencias... aunque a veces te hace más fuerte."
+action_type = &"event"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 2.5
+outcomes = [SubResource("out_injury"), SubResource("out_rest"), SubResource("out_break")]

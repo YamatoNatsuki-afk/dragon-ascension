@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3 uid="uid://train_ki_control"]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1_kic"]
+
+[resource]
+script = ExtResource("1_kic")
+id = &"train_ki_control"
+display_name = "Control de ki en movimiento"
+description = "Lanzar ki mientras te mueves. El fundamento de cualquier técnica avanzada."
+action_type = &"training"
+unlock_day = 10
+requires_unlock_flag = &""
+selection_weight = 1.1
+target_stats = [&"ki_max", &"speed"]
+base_gain = 1.2
+energy_cost = 2

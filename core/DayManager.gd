@@ -72,10 +72,19 @@ func execute_action(action: DayAction) -> void:
 # ─────────────────────────────────────────────
 
 func _resolve(action: DayAction, result: DayActionResult) -> void:
-	# Aplicar XP directamente en CharacterData
+	# Aplicar stat_changes a CharacterData.
+	# CharacterData es la fuente de verdad — siempre se actualiza aquí.
+	# El StatsComponent del Player (cuando exista en escena) sincroniza
+	# sus valores escuchando day_action_resolved, pero no es la fuente.
+	for stat_id: StringName in result.stat_changes.keys():
+		var delta: float   = result.stat_changes[stat_id]
+		var current: float = _character_data.base_stats.get(stat_id, 0.0)
+		_character_data.base_stats[stat_id] = maxf(0.1, current + delta)
+
+	# Aplicar XP
 	_character_data.experience += result.xp_gained
 
-	# StatsComponent escucha esta señal y aplica stat_changes
+	# Notificar a listeners (ProgressTracker, StatsComponent, UI)
 	EventBus.day_action_resolved.emit(action, result)
 
 	_end_day(result)
