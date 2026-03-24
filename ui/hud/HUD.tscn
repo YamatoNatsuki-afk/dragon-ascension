@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://co3pim5ytfk30"]
+
+[ext_resource type="Script" uid="uid://wvo3v60mtaoe" path="res://ui/hud/HUD.gd" id="1_wbxbo"]
+
+[node name="Hud" type="Node2D" unique_id=1346992526]
+script = ExtResource("1_wbxbo")

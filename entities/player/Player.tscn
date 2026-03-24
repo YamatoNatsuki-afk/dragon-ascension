@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://duun16qf4vu5c"]
+
+[ext_resource type="Script" uid="uid://tvwtst4xd1qx" path="res://entities/player/Player.gd" id="1_mab2k"]
+[ext_resource type="Script" uid="uid://6t51ee18162i" path="res://entities/player/states/PlayerStateMachine.gd" id="2_453mm"]
+[ext_resource type="Script" uid="uid://dcvk601as0vc" path="res://entities/player/states/IdleState.gd" id="3_eaotn"]
+[ext_resource type="Script" uid="uid://bsisa1u6ot4ie" path="res://entities/player/states/MoveState.gd" id="4_g3lhm"]
+[ext_resource type="Script" uid="uid://bf5qdqt5khj5x" path="res://entities/player/states/AttackState.gd" id="5_4pwj0"]
+[ext_resource type="Script" uid="uid://d1dd8ho0sw50m" path="res://entities/player/states/HurtState.gd" id="6_fmb3c"]
+[ext_resource type="Script" uid="uid://crw3yiorp2ry1" path="res://entities/player/components/StatsComponent.gd" id="7_q57vx"]
+[ext_resource type="Script" uid="uid://sc4c16vlcvhj" path="res://entities/player/components/HealthComponent.gd" id="8_ak4un"]
+[ext_resource type="Script" uid="uid://bxkbxrocehqst" path="res://entities/player/components/KiComponent.gd" id="9_1ms0h"]
+
+[node name="Player" type="CharacterBody2D" unique_id=1971594638]
+script = ExtResource("1_mab2k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1993780026]
+
+[node name="PlayerStateMachine" type="Node" parent="." unique_id=1713025192]
+script = ExtResource("2_453mm")
+
+[node name="IdleState" type="Node" parent="PlayerStateMachine" unique_id=2093114396]
+script = ExtResource("3_eaotn")
+
+[node name="MoveState" type="Node" parent="PlayerStateMachine" unique_id=585057843]
+script = ExtResource("4_g3lhm")
+
+[node name="AttackState" type="Node" parent="PlayerStateMachine" unique_id=65861021]
+script = ExtResource("5_4pwj0")
+
+[node name="HurtState" type="Node" parent="PlayerStateMachine" unique_id=768446482]
+script = ExtResource("6_fmb3c")
+
+[node name="StatsComponent" type="Node" parent="." unique_id=1698841540]
+script = ExtResource("7_q57vx")
+metadata/_custom_type_script = "uid://crw3yiorp2ry1"
+
+[node name="HealthComponent" type="Node" parent="." unique_id=423047311]
+script = ExtResource("8_ak4un")
+metadata/_custom_type_script = "uid://sc4c16vlcvhj"
+
+[node name="KiComponent" type="Node" parent="." unique_id=179086830]
+script = ExtResource("9_1ms0h")

@@ -1,0 +1,38 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Dragon Ascension"
+run/main_scene="uid://bjhirihu82bki"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+EventBus="*uid://btktmj8402krg"
+FlagSystem="*uid://5h3a3rsg143n"
+SaveSystem="*uid://dhew08vkfhv1y"
+RaceRegistry="*uid://ccu18giwxfak4"
+ActionRegistry="*uid://0lqv3ayhpsvm"
+GameStateProvider="*uid://3bhlq8pu0h7k"
+DayManager="*uid://bvahr5l1g8rq0"
+CheckpointSystem="*uid://b702rf12gwyxt"
+GameManager="*uid://68kxdfagjow8"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

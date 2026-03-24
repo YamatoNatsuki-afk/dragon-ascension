@@ -1,0 +1,51 @@
+res://
+├── core/                        # Sistemas singleton/autoload (no escenas)
+│   ├── GameManager.gd
+│   ├── DayManager.gd
+│   └── EventBus.gd              # Sistema de señales global desacoplado
+│
+├── data/                        # Resources puros (.tres / .res) — sin lógica
+│   ├── stats/
+│   │   ├── StatDefinition.gd    # Recurso: define qué es un stat
+│   │   └── base_stats/
+│   │       ├── saiyan_base.tres
+│   │       └── human_base.tres
+│   ├── races/
+│   │   └── RaceDefinition.gd
+│   └── characters/
+│       └── CharacterData.gd     # Recurso: snapshot del personaje del jugador
+│
+├── entities/
+│   ├── player/
+│   │   ├── Player.tscn
+│   │   ├── Player.gd
+│   │   ├── states/              # State machine del jugador
+│   │   │   ├── PlayerStateMachine.gd
+│   │   │   ├── PlayerState.gd   # Base class
+│   │   │   ├── IdleState.gd
+│   │   │   ├── MoveState.gd
+│   │   │   ├── AttackState.gd
+│   │   │   └── HurtState.gd
+│   │   └── components/          # Composición sobre herencia
+│   │       ├── StatsComponent.gd
+│   │       ├── HealthComponent.gd
+│   │       └── KiComponent.gd
+│   └── enemy/
+│       ├── Enemy.tscn
+│       └── Enemy.gd
+│
+├── ui/
+│   ├── hud/
+│   │   ├── HUD.tscn
+│   │   └── HUD.gd
+│   └── menus/
+│       └── MainMenu.tscn
+│
+├── scenes/                      # Escenas de mundo/niveles
+│   ├── training_ground/
+│   │   ├── TrainingGround.tscn
+│   │   └── TrainingGround.gd
+│   └── combat_arena/
+│       └── CombatArena.tscn
+│
+└── autoloads/                   # Referencia — los .gd viven en core/

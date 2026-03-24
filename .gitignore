@@ -1,0 +1,14 @@
+.import/
+.export/
+.export_presets.cfg
+
+# Godot cache
+.godot/
+
+# Archivos temporales
+*.tmp
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
