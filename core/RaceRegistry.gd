@@ -39,8 +39,16 @@ func get_race(race_id: StringName) -> RaceDefinition:
 
 ## Lista de ids disponibles — útil para poblar la UI de selección.
 func get_all_race_ids() -> Array[StringName]:
-	return _races.keys()
+	# Array.assign() hace el cast tipado de forma segura en Godot 4.
+	var result: Array[StringName] = []
+	result.assign(_races.keys())
+	return result
 
 ## Lista completa de RaceDefinitions — útil para mostrar cards en la UI.
 func get_all_races() -> Array[RaceDefinition]:
-	return _races.values()
+	# Dictionary.values() devuelve Array sin tipo.
+	# Array.assign() es el cast tipado correcto en Godot 4 —
+	# no lanza error si los elementos son del tipo correcto.
+	var result: Array[RaceDefinition] = []
+	result.assign(_races.values())
+	return result

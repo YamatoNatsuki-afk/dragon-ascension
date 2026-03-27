@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 EventBus="*uid://btktmj8402krg"
 FlagSystem="*uid://5h3a3rsg143n"
+StatRegistry="*uid://buvwghx1kye4f"
 SaveSystem="*uid://dhew08vkfhv1y"
 RaceRegistry="*uid://ccu18giwxfak4"
 ActionRegistry="*uid://0lqv3ayhpsvm"
@@ -26,6 +27,7 @@ GameStateProvider="*uid://3bhlq8pu0h7k"
 DayManager="*uid://bvahr5l1g8rq0"
 CheckpointSystem="*uid://b702rf12gwyxt"
 GameManager="*uid://68kxdfagjow8"
+CombatManager="*uid://dkgendfe2bj4s"
 
 [physics]
 

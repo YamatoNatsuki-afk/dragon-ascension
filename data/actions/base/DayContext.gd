@@ -7,11 +7,11 @@ class_name DayContext
 extends RefCounted
 
 var day_number: int
-var character_data: CharacterData     # Lectura únicamente
-var rng: RandomNumberGenerator        # RNG con semilla determinista por día
+var character_data              # CharacterData — lectura únicamente
+var rng: RandomNumberGenerator  # RNG con semilla determinista por día
 
 ## Crea un contexto sellado para el día actual del personaje.
-static func create(data: CharacterData) -> DayContext:
+static func create(data) -> DayContext:  # data: CharacterData
 	var ctx            := DayContext.new()
 	ctx.day_number     = data.current_day
 	ctx.character_data = data

@@ -1,0 +1,103 @@
+# ═══════════════════════════════════════════════════════════════
+# HABILIDADES PLACEHOLDER — data/skills/
+# Copiá cada bloque en un archivo .tres separado.
+# Son suficientes para probar la CustomizationScreen en C3.
+# ═══════════════════════════════════════════════════════════════
+
+# ── heavy_strike.tres ───────────────────────────────────────────
+[gd_resource type="Resource" script_class="SkillData" format=3]
+[ext_resource type="Script" path="res://data/skills/SkillData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"heavy_strike"
+display_name = "Golpe Pesado"
+description = "Un puñetazo cargado que aplasta al enemigo.\nMás lento pero devastador."
+skill_type = 0
+ki_cost = 0.0
+damage_multiplier = 2.0
+hit_count = 1
+is_ranged = false
+icon_id = &"heavy_strike"
+skill_color = Color(0.9, 0.2, 0.1)
+
+# ── rapid_combo.tres ────────────────────────────────────────────
+[gd_resource type="Resource" script_class="SkillData" format=3]
+[ext_resource type="Script" path="res://data/skills/SkillData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"rapid_combo"
+display_name = "Combo Rápido"
+description = "Serie de tres golpes veloces.\nCada impacto empuja al enemigo."
+skill_type = 0
+ki_cost = 0.0
+damage_multiplier = 0.6
+hit_count = 3
+is_ranged = false
+icon_id = &"rapid_combo"
+skill_color = Color(1.0, 0.5, 0.1)
+
+# ── kamehameha.tres ─────────────────────────────────────────────
+[gd_resource type="Resource" script_class="SkillData" format=3]
+[ext_resource type="Script" path="res://data/skills/SkillData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"kamehameha"
+display_name = "Kamehameha"
+description = "La técnica definitiva de la familia Son.\nConcentra el Ki en un haz devastador."
+skill_type = 1
+ki_cost = 30.0
+damage_multiplier = 2.5
+hit_count = 1
+is_ranged = true
+required_stats = { &"ki_max": 80.0 }
+icon_id = &"kamehameha"
+skill_color = Color(0.2, 0.5, 1.0)
+
+# ── ki_burst.tres ───────────────────────────────────────────────
+[gd_resource type="Resource" script_class="SkillData" format=3]
+[ext_resource type="Script" path="res://data/skills/SkillData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"ki_burst"
+display_name = "Explosión de Ki"
+description = "Libera Ki en todas las direcciones.\nIdeal para romper la guardia enemiga."
+skill_type = 1
+ki_cost = 15.0
+damage_multiplier = 1.2
+hit_count = 1
+is_ranged = false
+icon_id = &"ki_burst"
+skill_color = Color(0.4, 0.8, 1.0)
+
+# ── ki_recovery.tres ────────────────────────────────────────────
+[gd_resource type="Resource" script_class="SkillData" format=3]
+[ext_resource type="Script" path="res://data/skills/SkillData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"ki_recovery"
+display_name = "Meditación de Combate"
+description = "Pausa breve para recuperar Ki en plena batalla.\nLa calma es también una arma."
+skill_type = 2
+ki_cost = 0.0
+effect_value = 25.0
+cooldown = 8.0
+icon_id = &"ki_recovery"
+skill_color = Color(0.3, 0.9, 0.5)
+
+# ── final_flash.tres ────────────────────────────────────────────
+[gd_resource type="Resource" script_class="SkillData" format=3]
+[ext_resource type="Script" path="res://data/skills/SkillData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"final_flash"
+display_name = "Flash Final"
+description = "El orgullo del príncipe Saiyan.\nUn destello que puede partir una montaña."
+skill_type = 3
+ki_cost = 60.0
+damage_multiplier = 5.0
+hit_count = 1
+is_ranged = true
+required_stats = { &"ki_max": 150.0, &"strength": 80.0 }
+unlock_day = 50
+icon_id = &"final_flash"
+skill_color = Color(0.9, 0.9, 0.1)

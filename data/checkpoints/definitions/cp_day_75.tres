@@ -1,0 +1,159 @@
+[gd_resource type="Resource" script_class="CheckpointDefinition" format=3 uid="uid://cp_day_75"]
+
+[ext_resource type="Script" path="res://data/checkpoints/CheckpointDefinition.gd" id="1_cpdef"]
+[ext_resource type="Script" path="res://data/checkpoints/CheckpointOutcome.gd" id="2_cpout"]
+[ext_resource type="Script" path="res://data/consequences/ModifyStatConsequence.gd" id="3_modstat"]
+[ext_resource type="Script" path="res://data/consequences/SetFlagConsequence.gd" id="4_setflag"]
+[ext_resource type="Script" path="res://data/consequences/ModifySelectionWeightConsequence.gd" id="6_modweight"]
+[ext_resource type="Script" path="res://data/consequences/InjectEventConsequence.gd" id="7_inject"]
+
+[sub_resource type="Resource" id="stat_low_hp"]
+script = ExtResource("3_modstat")
+description = "Vegeta te destroza la musculatura con ataques de Ki precisos."
+stat_id = &"health_max"
+delta = -20.0
+min_value = 10.0
+
+[sub_resource type="Resource" id="stat_low_speed"]
+script = ExtResource("3_modstat")
+description = "Un ataque en el tendón te deja más lento para siempre."
+stat_id = &"speed"
+delta = -5.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_low_broken"]
+script = ExtResource("4_setflag")
+description = "Llegás al día 100 físicamente comprometido."
+flag_id = &"broken_by_vegeta"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_normal_ki"]
+script = ExtResource("3_modstat")
+description = "Sobrevivir al Ki de Vegeta expande tu propio depósito de energía."
+stat_id = &"ki_max"
+delta = 8.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_normal_def"]
+script = ExtResource("3_modstat")
+description = "Su precisión te enseña dónde estaban tus brechas defensivas."
+stat_id = &"defense"
+delta = 5.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_normal_vegeta_watching"]
+script = ExtResource("4_setflag")
+description = "Vegeta sigue mirando. No sabes si eso es bueno."
+flag_id = &"vegeta_watching"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_high_str"]
+script = ExtResource("3_modstat")
+description = "Empujar a Vegeta al límite revela reservas de fuerza propias."
+stat_id = &"strength"
+delta = 8.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_high_ki"]
+script = ExtResource("3_modstat")
+description = "Imitás inconscientemente su control de Ki."
+stat_id = &"ki_max"
+delta = 10.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_high_speed"]
+script = ExtResource("3_modstat")
+description = "Tu velocidad de reacción llega a un nivel casi sobrehumano."
+stat_id = &"speed"
+delta = 8.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="weight_high_all"]
+script = ExtResource("6_modweight")
+description = "Los últimos 25 días de entrenamiento son el doble de efectivos."
+action_id = &"train_combat_basics"
+weight_multiplier = 2.0
+duration_days = 25
+
+[sub_resource type="Resource" id="flag_high_final_stretch"]
+script = ExtResource("4_setflag")
+description = "Llegás al tramo final en plena forma."
+flag_id = &"final_stretch_ready"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_exc_str"]
+script = ExtResource("3_modstat")
+description = "El reconocimiento de Vegeta cataliza un salto de poder."
+stat_id = &"strength"
+delta = 12.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_ki"]
+script = ExtResource("3_modstat")
+description = "Tu Ki se vuelve tan puro que casi podés transformarte."
+stat_id = &"ki_max"
+delta = 15.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_speed"]
+script = ExtResource("3_modstat")
+description = "Velocidad de combate a nivel élite."
+stat_id = &"speed"
+delta = 10.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="inject_exc_rivals"]
+script = ExtResource("7_inject")
+description = "La noticia llega a Freeza. Manda exploradores los próximos días."
+event_action_id = &"rival_challenge"
+duration_days = 10
+
+[sub_resource type="Resource" id="flag_exc_vegeta_respect"]
+script = ExtResource("4_setflag")
+description = "Vegeta te respeta. Eso no le pasa a casi nadie."
+flag_id = &"vegeta_respect"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="flag_exc_freeza_aware"]
+script = ExtResource("4_setflag")
+description = "Freeza sabe que existís. El día 100 tendrá un sabor diferente."
+flag_id = &"freeza_aware"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="outcome_low"]
+script = ExtResource("2_cpout")
+min_grade = 0
+narrative = "Vegeta bosteza mientras te destroza. 'Patético. Y eso que ibas a enfrentar a Freeza.' Llegás al día 100 roto."
+consequences = [SubResource("stat_low_hp"), SubResource("stat_low_speed"), SubResource("flag_low_broken")]
+
+[sub_resource type="Resource" id="outcome_normal"]
+script = ExtResource("2_cpout")
+min_grade = 1
+narrative = "Vegeta para el combate. 'Interesante. No eres completamente inútil.' Se va sin más. Tenés 25 días para demostrar que se equivoca."
+consequences = [SubResource("stat_normal_ki"), SubResource("stat_normal_def"), SubResource("flag_normal_vegeta_watching")]
+
+[sub_resource type="Resource" id="outcome_high"]
+script = ExtResource("2_cpout")
+min_grade = 2
+narrative = "Vegeta al límite. 'Esto... no estaba en mis planes.' Se va furioso. Vos llegás al último mes con todo listo."
+consequences = [SubResource("stat_high_str"), SubResource("stat_high_ki"), SubResource("stat_high_speed"), SubResource("weight_high_all"), SubResource("flag_high_final_stretch")]
+
+[sub_resource type="Resource" id="outcome_exceptional"]
+script = ExtResource("2_cpout")
+min_grade = 3
+narrative = "Vegeta baja la guardia por primera vez en su vida. 'Eres digno de enfrentar a Freeza. No te decepciones.' Los exploradores de Freeza ya saben tu nombre."
+consequences = [SubResource("stat_exc_str"), SubResource("stat_exc_ki"), SubResource("stat_exc_speed"), SubResource("inject_exc_rivals"), SubResource("flag_exc_vegeta_respect"), SubResource("flag_exc_freeza_aware")]
+
+[resource]
+script = ExtResource("1_cpdef")
+id = &"cp_day_75"
+trigger_day = 75
+display_name = "La Amenaza Real"
+is_blocking = false
+min_score_to_pass = 0.0
+outcomes = [SubResource("outcome_low"), SubResource("outcome_normal"), SubResource("outcome_high"), SubResource("outcome_exceptional")]

@@ -11,7 +11,7 @@ extends Resource
 
 ## Aplica la consecuencia al personaje.
 ## Devuelve Dictionary { stat_id: delta } para logging en CheckpointResult.
-func apply(data: CharacterData) -> Dictionary:
+func apply(data) -> Dictionary:  # data: CharacterData
 	push_error("CheckpointConsequence.apply(): no implementado en '%s'." % resource_path)
 	return {}
 

@@ -1,0 +1,165 @@
+[gd_resource type="Resource" script_class="CheckpointDefinition" format=3 uid="uid://cp_day_100"]
+
+[ext_resource type="Script" path="res://data/checkpoints/CheckpointDefinition.gd" id="1_cpdef"]
+[ext_resource type="Script" path="res://data/checkpoints/CheckpointOutcome.gd" id="2_cpout"]
+[ext_resource type="Script" path="res://data/consequences/ModifyStatConsequence.gd" id="3_modstat"]
+[ext_resource type="Script" path="res://data/consequences/SetFlagConsequence.gd" id="4_setflag"]
+
+[sub_resource type="Resource" id="stat_low_all_hp"]
+script = ExtResource("3_modstat")
+description = "Freeza te deja en el límite de la existencia."
+stat_id = &"health_max"
+delta = -30.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_low_all_def"]
+script = ExtResource("3_modstat")
+description = "Tu defensa, insuficiente contra el poder de Freeza."
+stat_id = &"defense"
+delta = -5.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_low_end"]
+script = ExtResource("4_setflag")
+description = "El run termina en derrota. Pero sobreviviste 100 días."
+flag_id = &"run_result"
+flag_value = false
+flag_value_string = "defeat"
+
+[sub_resource type="Resource" id="stat_normal_str"]
+script = ExtResource("3_modstat")
+description = "100 días de entrenamiento se cristalizan en músculo puro."
+stat_id = &"strength"
+delta = 5.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_normal_ki"]
+script = ExtResource("3_modstat")
+description = "Tu Ki, más controlado que nunca al final del camino."
+stat_id = &"ki_max"
+delta = 5.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_normal_end"]
+script = ExtResource("4_setflag")
+description = "El run termina en empate moral."
+flag_id = &"run_result"
+flag_value = false
+flag_value_string = "draw"
+
+[sub_resource type="Resource" id="stat_high_str"]
+script = ExtResource("3_modstat")
+description = "La pelea final forja stats que el entrenamiento solo no habría dado."
+stat_id = &"strength"
+delta = 12.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_high_ki"]
+script = ExtResource("3_modstat")
+description = "Tu Ki alcanza el nivel de un guerrero élite."
+stat_id = &"ki_max"
+delta = 12.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_high_speed"]
+script = ExtResource("3_modstat")
+description = "Tu velocidad de reacción ya no es humana."
+stat_id = &"speed"
+delta = 8.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_high_def"]
+script = ExtResource("3_modstat")
+description = "Absorber los ataques de Freeza te vuelve casi indestructible."
+stat_id = &"defense"
+delta = 8.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_high_end"]
+script = ExtResource("4_setflag")
+description = "Victoria. Freeza se retira a su segunda forma."
+flag_id = &"run_result"
+flag_value = false
+flag_value_string = "victory"
+
+[sub_resource type="Resource" id="stat_exc_str"]
+script = ExtResource("3_modstat")
+description = "El pico de 100 días de voluntad pura."
+stat_id = &"strength"
+delta = 20.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_ki"]
+script = ExtResource("3_modstat")
+description = "Tu Ki rebasa lo que cualquier entrenador habría predicho."
+stat_id = &"ki_max"
+delta = 20.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_speed"]
+script = ExtResource("3_modstat")
+description = "Velocidad que desafía la física convencional."
+stat_id = &"speed"
+delta = 15.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_def"]
+script = ExtResource("3_modstat")
+description = "Defensa impenetrable. Freeza no te rompió."
+stat_id = &"defense"
+delta = 12.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_hp"]
+script = ExtResource("3_modstat")
+description = "Cien días de resistencia máxima."
+stat_id = &"health_max"
+delta = 20.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_exc_end"]
+script = ExtResource("4_setflag")
+description = "Victoria perfecta. El universo nunca olvidará este día."
+flag_id = &"run_result"
+flag_value = false
+flag_value_string = "perfect_victory"
+
+[sub_resource type="Resource" id="flag_exc_legend"]
+script = ExtResource("4_setflag")
+description = "Tu nombre se convierte en leyenda."
+flag_id = &"became_legend"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="outcome_low"]
+script = ExtResource("2_cpout")
+min_grade = 0
+narrative = "Freeza no suda. Te deja caer con calma. 'Cien días para esto.' Derrota total. Pero llegaste. Y eso, nadie te lo quita."
+consequences = [SubResource("stat_low_all_hp"), SubResource("stat_low_all_def"), SubResource("flag_low_end")]
+
+[sub_resource type="Resource" id="outcome_normal"]
+script = ExtResource("2_cpout")
+min_grade = 1
+narrative = "Le rajás el hombro. Freeza detiene el combate, perplejo. 'Curioso.' Se va a su nave sin explicación. Heriste a Freeza. Pocos pueden decir lo mismo."
+consequences = [SubResource("stat_normal_str"), SubResource("stat_normal_ki"), SubResource("flag_normal_end")]
+
+[sub_resource type="Resource" id="outcome_high"]
+script = ExtResource("2_cpout")
+min_grade = 2
+narrative = "Freeza revela su segunda forma. Primera vez en décadas. 'Obligaste a Freeza a esforzarse. Eso es... casi un honor.' Victoria con asterisco, pero victoria."
+consequences = [SubResource("stat_high_str"), SubResource("stat_high_ki"), SubResource("stat_high_speed"), SubResource("stat_high_def"), SubResource("flag_high_end")]
+
+[sub_resource type="Resource" id="outcome_exceptional"]
+script = ExtResource("2_cpout")
+min_grade = 3
+narrative = "Freeza en el suelo. Forma final. Los cien días no fueron suficientes para prepararte... pero tu voluntad sí lo fue. El universo cambia de eje. Tu nombre, grabado en la historia."
+consequences = [SubResource("stat_exc_str"), SubResource("stat_exc_ki"), SubResource("stat_exc_speed"), SubResource("stat_exc_def"), SubResource("stat_exc_hp"), SubResource("flag_exc_end"), SubResource("flag_exc_legend")]
+
+[resource]
+script = ExtResource("1_cpdef")
+id = &"cp_day_100"
+trigger_day = 100
+display_name = "El Límite Final"
+is_blocking = false
+min_score_to_pass = 0.0
+outcomes = [SubResource("outcome_low"), SubResource("outcome_normal"), SubResource("outcome_high"), SubResource("outcome_exceptional")]

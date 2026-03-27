@@ -1,54 +1,120 @@
 # entities/player/components/StatsComponent.gd
-# Gestiona los stats en runtime: lee CharacterData, aplica modificadores.
-# Es un Node hijo del Player — no un autoload.
+#
+# Mirror en runtime de los stats del personaje.
+#
+# RESPONSABILIDADES:
+#   - Leer base_stats desde CharacterData y exponerlos al juego
+#   - Gestionar modificadores temporales (buffs, debuffs, transformaciones)
+#   - Notificar a la UI cuando cambian los stats via EventBus
+#
+# CONTRATO EXPLÍCITO:
+#   - StatsComponent NUNCA escribe CharacterData.base_stats directamente.
+#   - La única fuente de escritura de base_stats es DayManager._resolve().
+#   - StatsComponent escucha day_action_resolved solo para notificar la UI,
+#     no para aplicar cambios (DayManager ya los aplicó antes de emitir).
+#
 class_name StatsComponent
 extends Node
 
-@export var character_data: CharacterData
+@export var character_data: Resource  # CharacterData
 
-# Modificadores temporales (buffs/debuffs): stat_id → valor acumulado
+# Modificadores temporales (buffs/debuffs): stat_id → valor acumulado delta.
+# No se persisten en CharacterData — son solo para la sesión de combate actual.
 var _modifiers: Dictionary = {}
 
+# ─────────────────────────────────────────────────────────────────────────────
+# INICIALIZACIÓN
+# ─────────────────────────────────────────────────────────────────────────────
+
 func _ready() -> void:
-	assert(character_data != null, "StatsComponent: CharacterData no asignado.")
-	# Conectar al EventBus para aplicar resultados del día
-	EventBus.day_action_resolved.connect(_on_day_action_resolved)
-	
-## Obtiene el valor final de un stat (base + modificadores).
-func get_stat(stat_id: StringName) -> float:  # <- el "-> float" es obligatorio
-	var base: float = character_data.stats.get(stat_id, 0.0)
+	# Si character_data viene del editor por @export, conectar directamente.
+	# Si no, initialize_from_data() se llamará en runtime — sin assert aquí
+	# porque ambas rutas son válidas dependiendo del contexto (editor vs runtime).
+	if character_data != null:
+		_connect_signals()
+
+## Inicialización en runtime (CharacterData viene de GameStateProvider o SaveSystem).
+## Llamar esto desde el nodo padre después de instanciar Player.tscn.
+func initialize_from_data(data) -> void:  # data: CharacterData
+	assert(data != null, "StatsComponent.initialize_from_data: data es null.")
+	character_data = data
+	_connect_signals()
+	# Sincronizar la UI con el estado actual del personaje al entrar en escena.
+	_broadcast_all_stats()
+
+# ─────────────────────────────────────────────────────────────────────────────
+# API PÚBLICA — GETTERS
+# ─────────────────────────────────────────────────────────────────────────────
+
+## Valor final de un stat: base (desde CharacterData) + modificadores temporales.
+## Es el valor que deben usar HealthComponent, KiComponent, y el sistema de combate.
+func get_stat(stat_id: StringName) -> float:
+	if character_data == null:
+		push_warning("StatsComponent.get_stat: character_data no inicializado. " +
+			"¿Se llamó initialize_from_data()?")
+		return 0.0
+	var base: float = character_data.base_stats.get(stat_id, 0.0)
 	var mod: float  = _modifiers.get(stat_id, 0.0)
 	return base + mod
 
-## Modifica el stat BASE permanentemente (entrenamiento, level up).
-func add_to_base(stat_id: StringName, amount: float) -> void:
-	if not character_data.stats.has(stat_id):
-		push_warning("StatsComponent: stat '%s' no existe en CharacterData." % stat_id)
-		return
-	character_data.stats[stat_id] += amount
-	EventBus.player_stats_changed.emit(stat_id, get_stat(stat_id))
+## Retorna true si el stat existe en CharacterData.
+func has_stat(stat_id: StringName) -> bool:
+	if character_data == null:
+		return false
+	return character_data.base_stats.has(stat_id)
 
-## Añade un modificador temporal (buff de transformación, etc.).
+# ─────────────────────────────────────────────────────────────────────────────
+# API PÚBLICA — MODIFICADORES TEMPORALES
+# Buffs y debuffs que duran solo durante el combate o una transformación.
+# No persisten en CharacterData.
+# ─────────────────────────────────────────────────────────────────────────────
+
+## Añade un modificador temporal (buff de transformación, estados de combate, etc.).
 func add_modifier(stat_id: StringName, amount: float) -> void:
 	_modifiers[stat_id] = _modifiers.get(stat_id, 0.0) + amount
 	EventBus.player_stats_changed.emit(stat_id, get_stat(stat_id))
 
-## Elimina un modificador específico.
+## Elimina un modificador temporal específico.
 func remove_modifier(stat_id: StringName, amount: float) -> void:
 	_modifiers[stat_id] = _modifiers.get(stat_id, 0.0) - amount
 	EventBus.player_stats_changed.emit(stat_id, get_stat(stat_id))
 
-func initialize_from_data(data: CharacterData) -> void:
-	assert(data != null, "StatsComponent.initialize_from_data: data es null.")
-	character_data = data
-	# Notificar al EventBus para que el HUD y otros sistemas se actualicen
+## Limpia todos los modificadores temporales.
+## Llamar al salir de combate o al desactivar una transformación completa.
+func clear_modifiers() -> void:
+	_modifiers.clear()
+	_broadcast_all_stats()
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PRIVADO
+# ─────────────────────────────────────────────────────────────────────────────
+
+## Conecta las señales del EventBus.
+## Protegido contra doble conexión — seguro llamarlo más de una vez.
+func _connect_signals() -> void:
+	if not EventBus.day_action_resolved.is_connected(_on_day_action_resolved):
+		EventBus.day_action_resolved.connect(_on_day_action_resolved)
+
+## Emite player_stats_changed para todos los stats actuales.
+## Sirve para sincronizar el HUD al inicializar o al limpiar modificadores.
+func _broadcast_all_stats() -> void:
 	for stat_id: StringName in character_data.base_stats.keys():
 		EventBus.player_stats_changed.emit(stat_id, get_stat(stat_id))
+
+## Receptor de la resolución del día (EventBus.day_action_resolved).
+##
+## IMPORTANTE: DayManager ya aplicó los cambios a CharacterData.base_stats
+## antes de emitir esta señal. Esta función SOLO notifica a la UI.
+## Aplicar los cambios aquí sería una doble escritura — no hacerlo.
 func _on_day_action_resolved(_action: DayAction, result: DayActionResult) -> void:
+	if character_data == null:
+		return
+
+	# Notificar solo los stats que cambiaron — evitar emitir señales innecesarias.
 	for stat_id: StringName in result.stat_changes.keys():
-		var delta: float = result.stat_changes[stat_id]
-		if delta != 0.0:
-			add_to_base(stat_id, delta)
+		if result.stat_changes[stat_id] != 0.0:
+			# get_stat() lee el valor ya actualizado en CharacterData por DayManager.
+			EventBus.player_stats_changed.emit(stat_id, get_stat(stat_id))
 
 	if result.xp_gained > 0.0:
 		EventBus.xp_gained.emit(result.xp_gained, character_data.experience)

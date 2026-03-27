@@ -10,7 +10,7 @@ enum State { WAITING, SHOWING_ACTIONS, SHOWING_RESULT }
 var _state: State = State.WAITING
 
 # ── Datos ──────────────────────────────────────────────────────────────────
-var _character_data: CharacterData
+var _character_data  # CharacterData
 var _available_actions: Array[DayAction] = []
 
 # ── Nodos UI (creados en _build_ui) ────────────────────────────────────────
@@ -331,14 +331,14 @@ func _on_day_actions_ready(actions: Array) -> void:
 	_state = State.SHOWING_ACTIONS
 	_populate_action_buttons()
 
-func _on_day_action_resolved(action: DayAction, result: DayActionResult) -> void:
+func _on_day_action_resolved(action, result) -> void:  # action: DayAction, result: DayActionResult
 	_state = State.SHOWING_RESULT
 	_show_result(action, result)
 
-func _on_day_ended(_day_number: int, _result: DayActionResult) -> void:
+func _on_day_ended(_day_number: int, _result) -> void:  # _result: DayActionResult
 	_refresh_stats()
 
-func _on_game_completed(_final_data: CharacterData) -> void:
+func _on_game_completed(_final_data) -> void:  # _final_data: CharacterData
 	_actions_title.text = "¡100 DÍAS COMPLETADOS!"
 	_clear_action_buttons()
 	_continue_button.text = "Ver resumen"
@@ -350,7 +350,7 @@ func _on_game_completed(_final_data: CharacterData) -> void:
 func _on_continue_pressed() -> void:
 	_result_overlay.visible = false
 	_state = State.WAITING
-	var day := _character_data.current_day
+	var day: int = _character_data.current_day
 	if DayManager.phase == DayManager.Phase.IDLE and day >= 1 and day <= 100:
 		DayManager.start_day()
 
@@ -462,7 +462,7 @@ func _on_action_selected(action: DayAction) -> void:
 # Panel de resultado
 # ─────────────────────────────────────────────────────────────────────────────
 
-func _show_result(action: DayAction, result: DayActionResult) -> void:
+func _show_result(action, result) -> void:  # action: DayAction, result: DayActionResult
 	for child in _result_changes_container.get_children():
 		child.queue_free()
 
@@ -524,7 +524,7 @@ func _refresh_stats() -> void:
 
 	_xp_label.text = "XP  %d" % int(_character_data.experience)
 
-	var priorities := _character_data.build.stat_priority_weights
+	var priorities: Dictionary = _character_data.build.stat_priority_weights
 	for stat_id: StringName in _character_data.base_stats.keys():
 		var val: float      = _character_data.base_stats[stat_id]
 		var priority: float = priorities.get(stat_id, 0.5)

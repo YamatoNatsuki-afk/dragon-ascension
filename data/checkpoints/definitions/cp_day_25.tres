@@ -1,0 +1,117 @@
+[gd_resource type="Resource" script_class="CheckpointDefinition" format=3 uid="uid://cp_day_25"]
+
+[ext_resource type="Script" path="res://data/checkpoints/CheckpointDefinition.gd" id="1_cpdef"]
+[ext_resource type="Script" path="res://data/checkpoints/CheckpointOutcome.gd" id="2_cpout"]
+[ext_resource type="Script" path="res://data/consequences/ModifyStatConsequence.gd" id="3_modstat"]
+[ext_resource type="Script" path="res://data/consequences/SetFlagConsequence.gd" id="4_setflag"]
+[ext_resource type="Script" path="res://data/consequences/ModifySelectionWeightConsequence.gd" id="5_modweight"]
+
+[sub_resource type="Resource" id="stat_low_health"]
+script = ExtResource("3_modstat")
+description = "Raditz te aplasta la caja torácica."
+stat_id = &"health_max"
+delta = -8.0
+min_value = 10.0
+
+[sub_resource type="Resource" id="flag_low_defeat"]
+script = ExtResource("4_setflag")
+description = "Marca la derrota — afecta narrativa futura."
+flag_id = &"defeated_by_raditz"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_normal_defense"]
+script = ExtResource("3_modstat")
+description = "La brutalidad de Raditz te forza a endurecer el cuerpo."
+stat_id = &"defense"
+delta = 3.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_normal_survived"]
+script = ExtResource("4_setflag")
+description = "Sobreviviste al encuentro."
+flag_id = &"survived_raditz"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_high_strength"]
+script = ExtResource("3_modstat")
+description = "Tus músculos se adaptan al nivel de impacto de Raditz."
+stat_id = &"strength"
+delta = 5.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_high_health"]
+script = ExtResource("3_modstat")
+description = "Tu cuerpo aprende a absorber golpes devastadores."
+stat_id = &"health_max"
+delta = 10.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_high_rival_attention"]
+script = ExtResource("4_setflag")
+description = "Guerreros más fuertes empiezan a buscarte."
+flag_id = &"rival_attention"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_exc_strength"]
+script = ExtResource("3_modstat")
+description = "Raditz activa algo latente en ti."
+stat_id = &"strength"
+delta = 8.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_ki"]
+script = ExtResource("3_modstat")
+description = "El combate despierta tu Ki interior."
+stat_id = &"ki_max"
+delta = 8.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="weight_exc_combat"]
+script = ExtResource("5_modweight")
+description = "El instinto de combate mejora tu selección de entrenamientos."
+action_id = &"train_combat_basics"
+weight_multiplier = 2.5
+duration_days = 10
+
+[sub_resource type="Resource" id="flag_exc_prodigy"]
+script = ExtResource("4_setflag")
+description = "Eres un prodigio. Los entrenadores élite te buscan."
+flag_id = &"prodigy_known"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="outcome_low"]
+script = ExtResource("2_cpout")
+min_grade = 0
+narrative = "Raditz ni suda. Te tira contra la pared y sigue su camino. Esto apenas empieza."
+consequences = [SubResource("stat_low_health"), SubResource("flag_low_defeat")]
+
+[sub_resource type="Resource" id="outcome_normal"]
+script = ExtResource("2_cpout")
+min_grade = 1
+narrative = "Le aguantas más de lo que esperaba. Raditz te ignora, pero tú sabes que creciste."
+consequences = [SubResource("stat_normal_defense"), SubResource("flag_normal_survived")]
+
+[sub_resource type="Resource" id="outcome_high"]
+script = ExtResource("2_cpout")
+min_grade = 2
+narrative = "Le arrancas un gesto de sorpresa. Raditz se retira: 'La próxima vez no seré tan amable.'"
+consequences = [SubResource("stat_high_strength"), SubResource("stat_high_health"), SubResource("flag_high_rival_attention")]
+
+[sub_resource type="Resource" id="outcome_exceptional"]
+script = ExtResource("2_cpout")
+min_grade = 3
+narrative = "Raditz en el suelo. Tú de pie. Algo en el universo cambió hoy. El nombre de tu guerrero empieza a sonar."
+consequences = [SubResource("stat_exc_strength"), SubResource("stat_exc_ki"), SubResource("weight_exc_combat"), SubResource("flag_exc_prodigy")]
+
+[resource]
+script = ExtResource("1_cpdef")
+id = &"cp_day_25"
+trigger_day = 25
+display_name = "La Primera Prueba"
+is_blocking = false
+min_score_to_pass = 0.0
+outcomes = [SubResource("outcome_low"), SubResource("outcome_normal"), SubResource("outcome_high"), SubResource("outcome_exceptional")]

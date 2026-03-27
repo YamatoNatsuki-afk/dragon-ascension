@@ -8,7 +8,7 @@ extends CheckpointConsequence
 ## Valor alternativo String para flags no-booleanos ("elite", "arc_2", etc.)
 @export var flag_value_string: String = ""
 
-func apply(_data: CharacterData) -> Dictionary:
+func apply(_data) -> Dictionary:  # _data: CharacterData
 	assert(flag_id != &"", "SetFlagConsequence: flag_id no puede estar vacío.")
 	var value: Variant = flag_value_string if flag_value_string != "" else flag_value
 	FlagSystem.set_flag(flag_id, value)

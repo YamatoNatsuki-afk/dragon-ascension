@@ -1,4 +1,4 @@
-# core/FlagSystem.gd  ← Autoload
+# res://core/FlagSystem.gd  ← Autoload
 # Almacén de flags persistentes para la partida actual.
 # Funciona como una pizarra (blackboard): cualquier sistema puede escribir,
 # cualquier sistema puede leer, nadie necesita conocer a nadie.
@@ -14,16 +14,15 @@ var _flags: Dictionary = {}
 # Historial para debugging y narrativa emergente
 var _history: Array[Dictionary] = []
 
-# ── Señales ───────────────────────────────────
+# ── Señales (sin cambios) ─────────────────────────────────────────────────────
 signal flag_set(flag_id: StringName, value: Variant)
 signal flag_cleared(flag_id: StringName)
 
-# ─────────────────────────────────────────────
-# Escritura
-# ─────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# ESCRITURA  ← sin cambios en firmas
+# ─────────────────────────────────────────────────────────────────────────────
 
 ## Establece un flag. Emite flag_set.
-## value puede ser bool, int, float o String.
 func set_flag(flag_id: StringName, value: Variant = true) -> void:
 	var prev: Variant = _flags.get(flag_id, null)
 	_flags[flag_id] = value
@@ -51,14 +50,13 @@ func reset() -> void:
 	_flags.clear()
 	_history.clear()
 
-# ─────────────────────────────────────────────
-# Lectura
-# ─────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# LECTURA  ← sin cambios en firmas
+# ─────────────────────────────────────────────────────────────────────────────
 
 ## Comprueba si un flag existe y es truthy.
 func has(flag_id: StringName) -> bool:
 	var val: Variant = _flags.get(flag_id, false)
-	# bool false, int 0, float 0.0 y String "" = falsy
 	match typeof(val):
 		TYPE_BOOL:   return val
 		TYPE_INT:    return val != 0
@@ -78,15 +76,66 @@ func get_all() -> Dictionary:
 func get_history() -> Array[Dictionary]:
 	return _history.duplicate()
 
-# ─────────────────────────────────────────────
-# Serialización (para SaveSystem)
-# ─────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# SERIALIZACIÓN
+#
+# serialize() y deserialize() son la interfaz con SaveSystem.
+# SOLO SaveSystem las llama — ningún otro sistema debe tocarlas.
+#
+# Formato del dict serializado:
+#   {
+#     "flags":   { StringName: Variant, ... },
+#     "history": [ { "flag", "value", "prev", "day" }, ... ]
+#   }
+#
+# Por qué guardamos el historial:
+#   ProgressTracker y CheckpointSystem lo usan para narrativa emergente.
+#   Sin él, al recargar el juego esos sistemas empezarían sin contexto.
+# ─────────────────────────────────────────────────────────────────────────────
 
-## Exporta el estado para guardarlo en CharacterData o un archivo separado.
+## Exporta el estado completo para que SaveSystem lo guarde en CharacterData.saved_flags.
+## Llama a esto ANTES de ResourceSaver.save().
 func serialize() -> Dictionary:
-	return { "flags": _flags.duplicate(), "history": _history.duplicate() }
+	# duplicate() es crítico: sin él, el dict que devolvemos apunta al mismo
+	# objeto que _flags. Si alguien modifica un flag después del serialize(),
+	# el snapshot guardado también cambiaría — lo que daría datos incorrectos.
+	return {
+		"flags":   _flags.duplicate(true),
+		"history": _history.duplicate(true),
+	}
 
-## Restaura el estado desde un Dictionary guardado.
+## Restaura el estado desde el dict guardado en CharacterData.saved_flags.
+## SaveSystem la llama justo después de ResourceLoader.load().
+## Si data está vacío (save legacy), FlagSystem queda en estado limpio — correcto.
 func deserialize(data: Dictionary) -> void:
-	_flags   = data.get("flags",   {})
-	_history = data.get("history", [])
+	# Reset explícito antes de restaurar para garantizar estado limpio.
+	# Sin esto, si había flags en memoria de una partida anterior, se mezclarían.
+	_flags.clear()
+	_history.clear()
+
+	# get() con fallback vacío garantiza compatibilidad con saves legacy
+	# que no tengan el campo saved_flags (CharacterData anterior al fix).
+	# Dictionary.get() devuelve Variant → OK para Dictionary.
+	# Array[Dictionary] no acepta Array sin tipo → usar assign() para cast tipado seguro.
+	_flags = data.get("flags", {})
+
+	var raw_history: Array = data.get("history", [])
+	_history.assign(raw_history)
+
+	# Validación de tipos: aseguramos que lo que cargamos tiene la forma esperada.
+	# Si el .tres fue corrompido o modificado a mano, fallamos rápido con mensaje claro.
+	if not (_flags is Dictionary):
+		push_error(
+			"FlagSystem.deserialize: 'flags' no es un Dictionary.\n" +
+			"  Tipo recibido: %s\n" % type_string(typeof(_flags)) +
+			"  FlagSystem se reinicia en estado limpio."
+		)
+		_flags = {}
+
+	if not (_history is Array):
+		push_error(
+			"FlagSystem.deserialize: 'history' no es un Array.\n" +
+			"  Tipo recibido: %s\n" % type_string(typeof(_history)) +
+			"  Historial se reinicia vacío."
+		)
+		_history = []

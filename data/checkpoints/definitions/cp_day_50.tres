@@ -1,0 +1,145 @@
+[gd_resource type="Resource" script_class="CheckpointDefinition" format=3 uid="uid://cp_day_50"]
+
+[ext_resource type="Script" path="res://data/checkpoints/CheckpointDefinition.gd" id="1_cpdef"]
+[ext_resource type="Script" path="res://data/checkpoints/CheckpointOutcome.gd" id="2_cpout"]
+[ext_resource type="Script" path="res://data/consequences/ModifyStatConsequence.gd" id="3_modstat"]
+[ext_resource type="Script" path="res://data/consequences/SetFlagConsequence.gd" id="4_setflag"]
+[ext_resource type="Script" path="res://data/consequences/ModifySelectionWeightConsequence.gd" id="7_modweight"]
+[ext_resource type="Script" path="res://data/consequences/InjectEventConsequence.gd" id="6_inject"]
+
+[sub_resource type="Resource" id="stat_low_hp"]
+script = ExtResource("3_modstat")
+description = "Nappa te fractura varias costillas."
+stat_id = &"health_max"
+delta = -15.0
+min_value = 10.0
+
+[sub_resource type="Resource" id="stat_low_str"]
+script = ExtResource("3_modstat")
+description = "La diferencia de fuerza deja marca psicológica."
+stat_id = &"strength"
+delta = -3.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_low_humiliated"]
+script = ExtResource("4_setflag")
+description = "La humillación te perseguirá hasta el final."
+flag_id = &"humiliated_by_nappa"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_normal_def"]
+script = ExtResource("3_modstat")
+description = "Sobrevivir a Nappa endurece cualquier cuerpo."
+stat_id = &"defense"
+delta = 4.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_normal_hp"]
+script = ExtResource("3_modstat")
+description = "Tu resistencia crece al límite de lo humano."
+stat_id = &"health_max"
+delta = 5.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="flag_normal_arc2"]
+script = ExtResource("4_setflag")
+description = "Entras en el segundo arco del torneo."
+flag_id = &"arc_tournament"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_high_str"]
+script = ExtResource("3_modstat")
+description = "El combate con Nappa lleva tu fuerza a un nuevo nivel."
+stat_id = &"strength"
+delta = 7.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_high_speed"]
+script = ExtResource("3_modstat")
+description = "Aprendes a esquivar impactos que te destruirían."
+stat_id = &"speed"
+delta = 5.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="weight_high_combat"]
+script = ExtResource("7_modweight")
+description = "El instinto de batalla se afila."
+action_id = &"train_combat_basics"
+weight_multiplier = 2.0
+duration_days = 15
+
+[sub_resource type="Resource" id="flag_high_recognized"]
+script = ExtResource("4_setflag")
+description = "Los otros participantes del torneo te temen."
+flag_id = &"tournament_recognized"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_exc_all_str"]
+script = ExtResource("3_modstat")
+description = "Nappa activa una reserva de poder que no sabías que tenías."
+stat_id = &"strength"
+delta = 10.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_all_ki"]
+script = ExtResource("3_modstat")
+description = "La victoria libera Ki reprimido."
+stat_id = &"ki_max"
+delta = 10.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_all_def"]
+script = ExtResource("3_modstat")
+description = "Tu cuerpo alcanza una dureza excepcional."
+stat_id = &"defense"
+delta = 6.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="inject_exc_rival"]
+script = ExtResource("6_inject")
+description = "El torneo atrae rivales más fuertes los próximos días."
+event_action_id = &"rival_challenge"
+duration_days = 7
+
+[sub_resource type="Resource" id="flag_exc_legend"]
+script = ExtResource("4_setflag")
+description = "Eres una leyenda del torneo. Vegeta habrá oído hablar de ti."
+flag_id = &"tournament_legend"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="outcome_low"]
+script = ExtResource("2_cpout")
+min_grade = 0
+narrative = "Nappa se ríe mientras te arrastra por el suelo del estadio. 'Llámame cuando crezcas.' Cincuenta días desperdiciados."
+consequences = [SubResource("stat_low_hp"), SubResource("stat_low_str"), SubResource("flag_low_humiliated")]
+
+[sub_resource type="Resource" id="outcome_normal"]
+script = ExtResource("2_cpout")
+min_grade = 1
+narrative = "Nappa para el combate cuando ve que no caes. 'Tienes agallas. Vuelve dentro de 50 días si sigues vivo.'"
+consequences = [SubResource("stat_normal_def"), SubResource("stat_normal_hp"), SubResource("flag_normal_arc2")]
+
+[sub_resource type="Resource" id="outcome_high"]
+script = ExtResource("2_cpout")
+min_grade = 2
+narrative = "Nappa retrocede tres pasos. Nunca había pasado. El estadio en silencio. Tú, de pie. El torneo es tuyo."
+consequences = [SubResource("stat_high_str"), SubResource("stat_high_speed"), SubResource("weight_high_combat"), SubResource("flag_high_recognized")]
+
+[sub_resource type="Resource" id="outcome_exceptional"]
+script = ExtResource("2_cpout")
+min_grade = 3
+narrative = "Nappa inconsciente. Alguien con guantes blancos y armadura dorada te observa desde las sombras. Vegeta anotó tu nombre."
+consequences = [SubResource("stat_exc_all_str"), SubResource("stat_exc_all_ki"), SubResource("stat_exc_all_def"), SubResource("inject_exc_rival"), SubResource("flag_exc_legend")]
+
+[resource]
+script = ExtResource("1_cpdef")
+id = &"cp_day_50"
+trigger_day = 50
+display_name = "El Torneo Oculto"
+is_blocking = false
+min_score_to_pass = 0.0
+outcomes = [SubResource("outcome_low"), SubResource("outcome_normal"), SubResource("outcome_high"), SubResource("outcome_exceptional")]

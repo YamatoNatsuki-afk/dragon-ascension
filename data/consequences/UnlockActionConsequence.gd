@@ -6,7 +6,7 @@ extends CheckpointConsequence
 
 @export var action_id: StringName = &""
 
-func apply(_data: CharacterData) -> Dictionary:
+func apply(_data) -> Dictionary:  # _data: CharacterData
 	assert(action_id != &"", "UnlockActionConsequence: action_id no puede estar vacío.")
 	FlagSystem.set_flag(_unlock_flag(action_id), true)
 	EventBus.action_unlocked.emit(action_id)

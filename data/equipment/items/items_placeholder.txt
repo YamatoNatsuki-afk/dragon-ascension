@@ -1,0 +1,75 @@
+# ═══════════════════════════════════════════════════════════════
+# ÍTEMS PLACEHOLDER — data/equipment/items/
+# Copiá cada bloque en un archivo .tres separado.
+# Son suficientes para probar la CustomizationScreen en C3.
+# ═══════════════════════════════════════════════════════════════
+
+# ── gi_orange_top.tres ──────────────────────────────────────────
+[gd_resource type="Resource" script_class="EquipmentItem" format=3]
+[ext_resource type="Script" path="res://data/equipment/EquipmentItem.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"gi_orange_top"
+display_name = "Gi Naranja"
+description = "El uniforme clásico del guerrero Z.\nSimple, resistente, legendario."
+slot = 0
+rarity = 0
+stat_bonuses = { &"defense": 3.0 }
+color_override = Color(1.0, 0.55, 0.0, 1.0)
+icon_id = &"gi_orange"
+
+# ── saiyan_armor_top.tres ───────────────────────────────────────
+[gd_resource type="Resource" script_class="EquipmentItem" format=3]
+[ext_resource type="Script" path="res://data/equipment/EquipmentItem.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"saiyan_armor_top"
+display_name = "Armadura Saiyan"
+description = "La armadura de los guerreros del espacio.\nDura, intimidante, funcional."
+slot = 0
+rarity = 2
+stat_bonuses = { &"defense": 8.0, &"strength": 3.0 }
+color_override = Color(1.0, 1.0, 1.0, 1.0)
+icon_id = &"saiyan_armor"
+
+# ── weighted_boots.tres ─────────────────────────────────────────
+[gd_resource type="Resource" script_class="EquipmentItem" format=3]
+[ext_resource type="Script" path="res://data/equipment/EquipmentItem.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"weighted_boots"
+display_name = "Botas con Pesas"
+description = "Entrenar con peso extra forja la velocidad.\nLentas durante el entrenamiento, rápidas en combate."
+slot = 4
+rarity = 1
+stat_bonuses = { &"speed": 5.0, &"strength": 2.0 }
+color_override = Color(0.0, 0.0, 0.0, 0.0)
+icon_id = &"weighted_boots"
+
+# ── power_gloves.tres ───────────────────────────────────────────
+[gd_resource type="Resource" script_class="EquipmentItem" format=3]
+[ext_resource type="Script" path="res://data/equipment/EquipmentItem.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"power_gloves"
+display_name = "Guantes de Combate"
+description = "Refuerzan el impacto de cada golpe.\nSimples pero efectivos."
+slot = 2
+rarity = 1
+stat_bonuses = { &"strength": 6.0 }
+color_override = Color(0.0, 0.0, 0.0, 0.0)
+icon_id = &"power_gloves"
+
+# ── senzu_belt.tres ─────────────────────────────────────────────
+[gd_resource type="Resource" script_class="EquipmentItem" format=3]
+[ext_resource type="Script" path="res://data/equipment/EquipmentItem.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"senzu_belt"
+display_name = "Cinturón de Senzu"
+description = "Lleva semillas de senzu en combate.\nAumenta la resistencia máxima."
+slot = 4
+rarity = 3
+stat_bonuses = { &"health_max": 50.0, &"defense": 5.0 }
+color_override = Color(0.0, 0.0, 0.0, 0.0)
+icon_id = &"senzu_belt"

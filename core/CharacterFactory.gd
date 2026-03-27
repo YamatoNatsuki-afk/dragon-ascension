@@ -11,14 +11,14 @@ static func create(
 	p_race_id: StringName,
 	p_appearance: AppearanceData = null,
 	p_build: BuildData = null
-) -> CharacterData:
+):  # → CharacterData
 
 	var race: RaceDefinition = RaceRegistry.get_race(p_race_id)
 	if race == null:
 		push_error("CharacterFactory: raza '%s' no existe." % p_race_id)
 		return null
 
-	var data := CharacterData.new()
+	var data = CharacterData.new()  # CharacterData
 	data.character_name = p_name
 	data.race_id        = p_race_id
 
@@ -29,11 +29,14 @@ static func create(
 	data.appearance = p_appearance if p_appearance else _default_appearance(race)
 	data.build      = p_build      if p_build      else BuildData.new()
 
+	# equipment y skill_loadout usan lazy init en CharacterData
+	# via get_equipment() y get_skill_loadout() — no se crean aquí
+	# para evitar dependencias de orden de carga.
+
 	return data
 
 ## Aplica los multiplicadores de raza a cada stat base del personaje.
-## Separado para que sea testeable de forma independiente.
-static func _apply_race_multipliers(data: CharacterData, race: RaceDefinition) -> void:
+static func _apply_race_multipliers(data, race: RaceDefinition) -> void:  # data: CharacterData
 	for stat_id: StringName in data.base_stats.keys():
 		var multiplier: float = race.stat_multipliers.get(stat_id, 1.0)
 		data.base_stats[stat_id] *= multiplier

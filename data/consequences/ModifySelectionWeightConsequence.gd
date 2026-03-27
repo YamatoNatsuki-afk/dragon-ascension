@@ -8,11 +8,11 @@ extends CheckpointConsequence
 @export var weight_multiplier: float = 2.0  # 2.0 = doble probable, 0.5 = mitad
 @export var duration_days: int       = 5
 
-func apply(data: CharacterData) -> Dictionary:
+func apply(data) -> Dictionary:  # data: CharacterData
 	assert(action_id != &"",        "ModifySelectionWeightConsequence: action_id vacío.")
 	assert(weight_multiplier > 0.0, "ModifySelectionWeightConsequence: multiplicador debe ser > 0.")
-	var expiry_day := data.current_day + duration_days
-	var key        := ("weight_mod:%s" % action_id) as StringName
+	var expiry_day: int = data.current_day + duration_days
+	var key := ("weight_mod:%s" % action_id) as StringName
 	FlagSystem.set_flag(key, "%s:%d" % [weight_multiplier, expiry_day])
 	return { "weight_modified": action_id, "multiplier": weight_multiplier }
 
