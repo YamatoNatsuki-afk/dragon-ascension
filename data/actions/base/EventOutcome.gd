@@ -1,6 +1,6 @@
 # res://data/actions/base/EventOutcome.gd
 # Resource inline — se define como sub-resource dentro del .tres del EventAction.
-# ARCHIVO CANÓNICO — eliminar: res://data/characters/actions/EventOutcome.gd
+# ARCHIVO CANÓNICO — eliminar: res://data/actions/base/EventOutcome.gd
 class_name EventOutcome
 extends Resource
 

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="RaceDefinition" format=3 uid="uid://saiyan_race_def"]
+
+[ext_resource type="Script" path="res://data/races/RaceDefinition.gd" id="1_saiyan"]
+
+[resource]
+script = ExtResource("1_saiyan")
+id = &"saiyan"
+display_name = "Saiyajin"
+description = "Guerreros de élite. Fuerza y velocidad superiores, ki inicial reducido. Su instinto de combate es incomparable. Su poder crece con cada batalla superada."
+stat_multipliers = {
+&"fuerza":        1.5,
+&"velocidad":     1.3,
+&"ki":            0.8,
+&"vitalidad":     1.2,
+&"resistencia":   1.1,
+&"poder_ki":      0.9,
+&"inteligencia":  0.9,
+&"intel_combate": 1.3
+}
+racial_traits = [&"zenkai_boost", &"battle_hunger"]
+xp_multiplier = 0.9
+default_aura_color = Color(1.0, 0.85, 0.1, 1.0)

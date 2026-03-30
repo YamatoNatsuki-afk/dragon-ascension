@@ -1,23 +1,38 @@
-[gd_resource type="Resource" script_class="EventAction" format=3 uid="uid://mysterious_encounter"]
+[gd_resource type="Resource" script_class="EventAction" format=3 uid="uid://cjit0e0c2gjm1"]
 
-[ext_resource type="Script" path="res://data/characters/events/EventAction.gd" id="1_ev"]
-[ext_resource type="Script" path="res://data/characters/actions/EventOutcome.gd" id="2_out"]
+[ext_resource type="Script" uid="uid://cq8obv3nq3t3y" path="res://data/characters/events/EventAction.gd" id="1_ev"]
+[ext_resource type="Script" uid="uid://c1klmtlhcaau5" path="res://data/actions/base/EventOutcome.gd" id="2_out"]
+
+; MIGRACIÓN v2:
+;   ki_max    → ki
+;   speed     → velocidad
+;   strength  → fuerza
+;
+; DISEÑO:
+;   teaching       → el anciano comparte técnica físca y ki (fuerza + ki + velocidad)
+;   mental_challenge → desafío de control interior (ki +2.0, velocidad -0.5 — foco vs movimiento)
+;   illusion       → sin ganancia de stats — solo XP por la experiencia vivida
 
 [sub_resource type="Resource" id="out_teaching"]
 script = ExtResource("2_out")
 narrative_key = "event.encounter.teaching"
 weight = 2.0
-stat_changes = {&"strength": 0.5, &"speed": 0.5, &"ki_max": 0.5}
+stat_changes = {
+&"ki": 0.5,
+&"velocidad": 0.5,
+&"fuerza": 0.5
+}
 xp_gained = 50.0
-extra_data = {}
 
 [sub_resource type="Resource" id="out_mental"]
 script = ExtResource("2_out")
 narrative_key = "event.encounter.mental_challenge"
 weight = 2.0
-stat_changes = {&"ki_max": 2.0, &"speed": -0.5}
+stat_changes = {
+&"ki": 2.0,
+&"velocidad": -0.5
+}
 xp_gained = 30.0
-extra_data = {}
 
 [sub_resource type="Resource" id="out_illusion"]
 script = ExtResource("2_out")
@@ -25,7 +40,6 @@ narrative_key = "event.encounter.illusion"
 weight = 1.0
 stat_changes = {}
 xp_gained = 10.0
-extra_data = {}
 
 [resource]
 script = ExtResource("1_ev")
@@ -36,4 +50,4 @@ action_type = &"event"
 unlock_day = 10
 requires_unlock_flag = &""
 selection_weight = 0.6
-outcomes = [SubResource("out_teaching"), SubResource("out_mental"), SubResource("out_illusion")]
+outcomes = Array[ExtResource("2_out")]([SubResource("out_teaching"), SubResource("out_mental"), SubResource("out_illusion")])

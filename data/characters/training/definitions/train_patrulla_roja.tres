@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_patrulla_roja"
+display_name = "Protocolo de la Patrulla Roja"
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.0
+; Entrenamiento militar riguroso — el único que sube tres stats a la vez,
+; pero con base_gain menor para compensar.
+; Ideal para builds defensivos que quieran también fuerza.
+; No sube ki ni intel — te hacen máquina de pelear, no guerrero.
+target_stats = [&"fuerza", &"resistencia", &"vitalidad"]
+base_gain = 1.4
+energy_cost = 1

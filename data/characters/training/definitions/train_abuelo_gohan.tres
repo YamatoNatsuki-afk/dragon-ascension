@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_abuelo_gohan"
+display_name = "Entrenamiento con el Abuelo Gohan"
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.1
+; Artes marciales tradicionales. Sube fuerza e intel_combate por igual.
+; Primer maestro disponible — introduce la idea de que un buen maestro es mejor que entrenar solo.
+target_stats = [&"fuerza", &"intel_combate"]
+base_gain = 2.2
+energy_cost = 1

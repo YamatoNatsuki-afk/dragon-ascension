@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_resistencia"
+display_name = "Entrenamiento defensivo"
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.2
+; Secundario: vitalidad — aguantar golpes a largo plazo aumenta la stamina total.
+target_stats = [&"resistencia", &"vitalidad"]
+base_gain = 1.8
+energy_cost = 1

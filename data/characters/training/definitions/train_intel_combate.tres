@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_intel_combate"
+display_name = "Analisis de combate"
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.2
+; Secundario: velocidad — analizar combates entrena los reflejos y el tiempo de reacción.
+target_stats = [&"intel_combate", &"velocidad"]
+base_gain = 1.5
+energy_cost = 1

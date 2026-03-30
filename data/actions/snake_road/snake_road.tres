@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="SnakeRoadAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/actions/snake_road/SnakeRoadAction.gd" id="1"]
+[ext_resource type="Script" path="res://data/characters/actions/conditions/ActionCondition.gd" id="2"]
+
+; Condición: velocidad >= 40 (no te caés del camino)
+; Cuando IS_DEAD esté implementado se agrega como condición adicional
+[sub_resource type="Resource" id="cond_vel"]
+script = ExtResource("2")
+type = 3
+stat_id = &"velocidad"
+value_float = 40.0
+
+[resource]
+script = ExtResource("1")
+id = &"snake_road"
+display_name = "Correr el Camino de la Serpiente"
+action_type = &"training"
+display_category = &"maestro"
+unlock_day = 1
+requires_unlock_flag = &"is_dead"
+selection_weight = 2.0
+conditions = [SubResource("cond_vel")]
+velocity_requirement = 40.0

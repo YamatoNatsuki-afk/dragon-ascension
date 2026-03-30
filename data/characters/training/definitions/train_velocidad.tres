@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_velocidad"
+display_name = "Entrenamiento de velocidad"
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.2
+; Secundario: intel_combate — el movimiento veloz agudiza el instinto de reacción.
+target_stats = [&"velocidad", &"intel_combate"]
+base_gain = 1.8
+energy_cost = 1

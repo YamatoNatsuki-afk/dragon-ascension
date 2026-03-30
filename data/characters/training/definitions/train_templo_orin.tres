@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_templo_orin"
+display_name = "Disciplina del Templo Orin"
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.0
+; Entrenamiento monástico — construye resistencia física y fuerza bruta sin nada de ki.
+; Alternativa disciplinada a train_resistencia con mejor ratio en fuerza.
+target_stats = [&"fuerza", &"resistencia"]
+base_gain = 2.0
+energy_cost = 1

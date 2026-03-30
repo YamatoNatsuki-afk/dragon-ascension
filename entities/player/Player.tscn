@@ -15,8 +15,9 @@ script = ExtResource("1_mab2k")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1993780026]
 
-[node name="PlayerStateMachine" type="Node" parent="." unique_id=1713025192]
+[node name="PlayerStateMachine" type="Node" parent="." unique_id=1713025192 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_453mm")
+initial_state = NodePath("IdleState")
 
 [node name="IdleState" type="Node" parent="PlayerStateMachine" unique_id=2093114396]
 script = ExtResource("3_eaotn")

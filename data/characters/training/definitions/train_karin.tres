@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+[ext_resource type="Script" path="res://data/characters/actions/conditions/ActionCondition.gd" id="2"]
+
+[sub_resource type="Resource" id="cond_raditz"]
+script = ExtResource("2")
+type = 1
+flag_id = &"survived_raditz"
+
+[sub_resource type="Resource" id="cond_vel"]
+script = ExtResource("2")
+type = 3
+stat_id = &"velocidad"
+value_float = 30.0
+
+[resource]
+script = ExtResource("1")
+id = &"train_karin"
+display_name = "Entrenamiento en la Torre de Karin"
+action_type = &"training"
+unlock_day = 25
+requires_unlock_flag = &""
+selection_weight = 1.2
+conditions = [SubResource("cond_raditz"), SubResource("cond_vel")]
+target_stats = [&"ki", &"velocidad"]
+scale_stat_id = &"ki"
+scale_threshold = 50.0
+scale_max_bonus = 0.5
+base_gain = 2.4
+energy_cost = 1

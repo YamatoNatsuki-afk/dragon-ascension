@@ -7,17 +7,17 @@
 [ext_resource type="Script" path="res://data/consequences/ModifySelectionWeightConsequence.gd" id="6_modweight"]
 [ext_resource type="Script" path="res://data/consequences/InjectEventConsequence.gd" id="7_inject"]
 
-[sub_resource type="Resource" id="stat_low_hp"]
+[sub_resource type="Resource" id="stat_low_vitalidad"]
 script = ExtResource("3_modstat")
 description = "Vegeta te destroza la musculatura con ataques de Ki precisos."
-stat_id = &"health_max"
-delta = -20.0
-min_value = 10.0
+stat_id = &"vitalidad"
+delta = -8.0
+min_value = 1.0
 
-[sub_resource type="Resource" id="stat_low_speed"]
+[sub_resource type="Resource" id="stat_low_velocidad"]
 script = ExtResource("3_modstat")
 description = "Un ataque en el tendón te deja más lento para siempre."
-stat_id = &"speed"
+stat_id = &"velocidad"
 delta = -5.0
 min_value = 1.0
 
@@ -28,18 +28,25 @@ flag_id = &"broken_by_vegeta"
 flag_value = true
 flag_value_string = ""
 
+[sub_resource type="Resource" id="flag_low_near_death"]
+script = ExtResource("4_setflag")
+description = "Vegeta te lleva al borde de la muerte. Algo en vos se despierta."
+flag_id = &"near_death_event"
+flag_value = true
+flag_value_string = ""
+
 [sub_resource type="Resource" id="stat_normal_ki"]
 script = ExtResource("3_modstat")
 description = "Sobrevivir al Ki de Vegeta expande tu propio depósito de energía."
-stat_id = &"ki_max"
-delta = 8.0
+stat_id = &"ki"
+delta = 5.0
 min_value = 1.0
 
-[sub_resource type="Resource" id="stat_normal_def"]
+[sub_resource type="Resource" id="stat_normal_resistencia"]
 script = ExtResource("3_modstat")
 description = "Su precisión te enseña dónde estaban tus brechas defensivas."
-stat_id = &"defense"
-delta = 5.0
+stat_id = &"resistencia"
+delta = 4.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="flag_normal_vegeta_watching"]
@@ -49,25 +56,32 @@ flag_id = &"vegeta_watching"
 flag_value = true
 flag_value_string = ""
 
-[sub_resource type="Resource" id="stat_high_str"]
+[sub_resource type="Resource" id="flag_normal_near_death"]
+script = ExtResource("4_setflag")
+description = "Estuviste a un golpe de morir. Algo en tu interior crujió."
+flag_id = &"near_death_event"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_high_fuerza"]
 script = ExtResource("3_modstat")
 description = "Empujar a Vegeta al límite revela reservas de fuerza propias."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 8.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_high_ki"]
 script = ExtResource("3_modstat")
 description = "Imitás inconscientemente su control de Ki."
-stat_id = &"ki_max"
-delta = 10.0
+stat_id = &"ki"
+delta = 6.0
 min_value = 1.0
 
-[sub_resource type="Resource" id="stat_high_speed"]
+[sub_resource type="Resource" id="stat_high_velocidad"]
 script = ExtResource("3_modstat")
 description = "Tu velocidad de reacción llega a un nivel casi sobrehumano."
-stat_id = &"speed"
-delta = 8.0
+stat_id = &"velocidad"
+delta = 6.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="weight_high_all"]
@@ -84,25 +98,39 @@ flag_id = &"final_stretch_ready"
 flag_value = true
 flag_value_string = ""
 
-[sub_resource type="Resource" id="stat_exc_str"]
+[sub_resource type="Resource" id="flag_high_near_death"]
+script = ExtResource("4_setflag")
+description = "Vegeta te empujó más allá de tus límites. El Ki interno responde."
+flag_id = &"near_death_event"
+flag_value = true
+flag_value_string = ""
+
+[sub_resource type="Resource" id="stat_exc_fuerza"]
 script = ExtResource("3_modstat")
 description = "El reconocimiento de Vegeta cataliza un salto de poder."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 12.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_exc_ki"]
 script = ExtResource("3_modstat")
 description = "Tu Ki se vuelve tan puro que casi podés transformarte."
-stat_id = &"ki_max"
-delta = 15.0
+stat_id = &"ki"
+delta = 10.0
 min_value = 1.0
 
-[sub_resource type="Resource" id="stat_exc_speed"]
+[sub_resource type="Resource" id="stat_exc_velocidad"]
 script = ExtResource("3_modstat")
 description = "Velocidad de combate a nivel élite."
-stat_id = &"speed"
-delta = 10.0
+stat_id = &"velocidad"
+delta = 8.0
+min_value = 1.0
+
+[sub_resource type="Resource" id="stat_exc_poder_ki"]
+script = ExtResource("3_modstat")
+description = "El control de Ki de Vegeta te enseña algo que ningún maestro pudo."
+stat_id = &"poder_ki"
+delta = 4.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="inject_exc_rivals"]
@@ -125,29 +153,36 @@ flag_id = &"freeza_aware"
 flag_value = true
 flag_value_string = ""
 
+[sub_resource type="Resource" id="flag_exc_near_death"]
+script = ExtResource("4_setflag")
+description = "Vegeta lo dio todo. Vos también. En el límite, algo legendario despertó."
+flag_id = &"near_death_event"
+flag_value = true
+flag_value_string = ""
+
 [sub_resource type="Resource" id="outcome_low"]
 script = ExtResource("2_cpout")
 min_grade = 0
-narrative = "Vegeta bosteza mientras te destroza. 'Patético. Y eso que ibas a enfrentar a Freeza.' Llegás al día 100 roto."
-consequences = [SubResource("stat_low_hp"), SubResource("stat_low_speed"), SubResource("flag_low_broken")]
+narrative = "Vegeta bosteza mientras te destroza. 'Patético. Y eso que ibas a enfrentar a Freeza.' Llegás al día 100 roto — pero algo en tu interior sobrevivió al límite."
+consequences = [SubResource("stat_low_vitalidad"), SubResource("stat_low_velocidad"), SubResource("flag_low_broken"), SubResource("flag_low_near_death")]
 
 [sub_resource type="Resource" id="outcome_normal"]
 script = ExtResource("2_cpout")
 min_grade = 1
-narrative = "Vegeta para el combate. 'Interesante. No eres completamente inútil.' Se va sin más. Tenés 25 días para demostrar que se equivoca."
-consequences = [SubResource("stat_normal_ki"), SubResource("stat_normal_def"), SubResource("flag_normal_vegeta_watching")]
+narrative = "Vegeta para el combate. 'Interesante. No eres completamente inútil.' Se va sin más. Algo dentro de vos ya empezó a cambiar."
+consequences = [SubResource("stat_normal_ki"), SubResource("stat_normal_resistencia"), SubResource("flag_normal_vegeta_watching"), SubResource("flag_normal_near_death")]
 
 [sub_resource type="Resource" id="outcome_high"]
 script = ExtResource("2_cpout")
 min_grade = 2
-narrative = "Vegeta al límite. 'Esto... no estaba en mis planes.' Se va furioso. Vos llegás al último mes con todo listo."
-consequences = [SubResource("stat_high_str"), SubResource("stat_high_ki"), SubResource("stat_high_speed"), SubResource("weight_high_all"), SubResource("flag_high_final_stretch")]
+narrative = "Vegeta al límite. 'Esto... no estaba en mis planes.' Se va furioso. Vos llegás al último mes con todo listo — y una energía nueva rugiendo en tu interior."
+consequences = [SubResource("stat_high_fuerza"), SubResource("stat_high_ki"), SubResource("stat_high_velocidad"), SubResource("weight_high_all"), SubResource("flag_high_final_stretch"), SubResource("flag_high_near_death")]
 
 [sub_resource type="Resource" id="outcome_exceptional"]
 script = ExtResource("2_cpout")
 min_grade = 3
-narrative = "Vegeta baja la guardia por primera vez en su vida. 'Eres digno de enfrentar a Freeza. No te decepciones.' Los exploradores de Freeza ya saben tu nombre."
-consequences = [SubResource("stat_exc_str"), SubResource("stat_exc_ki"), SubResource("stat_exc_speed"), SubResource("inject_exc_rivals"), SubResource("flag_exc_vegeta_respect"), SubResource("flag_exc_freeza_aware")]
+narrative = "Vegeta baja la guardia por primera vez en su vida. 'Eres digno de enfrentar a Freeza.' Dentro de vos, algo legendario está a punto de emerger."
+consequences = [SubResource("stat_exc_fuerza"), SubResource("stat_exc_ki"), SubResource("stat_exc_velocidad"), SubResource("stat_exc_poder_ki"), SubResource("inject_exc_rivals"), SubResource("flag_exc_vegeta_respect"), SubResource("flag_exc_freeza_aware"), SubResource("flag_exc_near_death")]
 
 [resource]
 script = ExtResource("1_cpdef")

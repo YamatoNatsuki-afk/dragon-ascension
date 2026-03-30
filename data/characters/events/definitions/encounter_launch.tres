@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="NpcEncounterAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/events/NpcEncounterAction.gd" id="1"]
+[ext_resource type="Script" path="res://data/characters/events/NpcEncounterOutcome.gd" id="2"]
+[ext_resource type="Script" path="res://data/characters/actions/conditions/ActionCondition.gd" id="3"]
+
+; Requiere conocer a Bulma primero — Launch vive en la isla de Roshi
+[sub_resource type="Resource" id="cond_bulma"]
+script  = ExtResource("3")
+type    = 1
+flag_id = &"npc_known_bulma"
+
+; Outcome 1: Launch amigable (azul) — te ayuda con el entrenamiento
+[sub_resource type="Resource" id="outcome_friendly"]
+script        = ExtResource("2")
+narrative_key = &"npc.launch.friendly"
+description   = "Launch (de cabello azul) te prepara comida y te da consejos de entrenamiento. Es sorprendentemente amable."
+weight        = 2.0
+stat_changes  = {&"vitalidad": 1.0, &"resistencia": 0.5}
+xp_gained     = 15.0
+flags_to_set  = [&"npc_known_launch", &"npc_roshi_intro"]
+
+; Outcome 2: Launch hostil (rubia) — te dispara pero te entrena sin querer
+[sub_resource type="Resource" id="outcome_hostile"]
+script        = ExtResource("2")
+narrative_key = &"npc.launch.hostile"
+description   = "Launch estornuda y se vuelve rubia. Antes de que te des cuenta, estás esquivando balas. Involuntariamente, fue el mejor entrenamiento del mes."
+weight        = 2.0
+stat_changes  = {&"velocidad": 1.5, &"intel_combate": 1.0}
+xp_gained     = 25.0
+flags_to_set  = [&"npc_known_launch", &"npc_roshi_intro"]
+
+[resource]
+script           = ExtResource("1")
+id               = &"encounter_launch"
+display_name     = "Encuentro con Launch"
+action_type      = &"event"
+display_category = &"event"
+unlock_day       = 5
+requires_unlock_flag = &""
+selection_weight = 1.2
+conditions       = [SubResource("cond_bulma")]
+npc_id           = &"launch"
+npc_name         = "Launch"
+completion_flag  = &"npc_known_launch"
+outcomes         = [SubResource("outcome_friendly"), SubResource("outcome_hostile")]

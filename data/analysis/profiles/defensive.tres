@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BuildProfile" format=3 uid="uid://build_profile_defensive"]
+
+[ext_resource type="Script" path="res://data/analysis/BuildProfile.gd" id="1_defensive"]
+
+[resource]
+script = ExtResource("1_defensive")
+id = &"defensive"
+display_name = "Defensive"
+description = "Vitalidad y resistencia. Imposible de derribar."
+required_high_stats = [&"vitalidad", &"resistencia"]
+penalized_stats = [&"velocidad"]
+threshold_high = 0.7
+profile_color = Color(0.4, 0.8, 0.3, 1.0)
+icon_id = &"defensive"

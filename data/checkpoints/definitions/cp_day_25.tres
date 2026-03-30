@@ -9,7 +9,7 @@
 [sub_resource type="Resource" id="stat_low_health"]
 script = ExtResource("3_modstat")
 description = "Raditz te aplasta la caja torácica."
-stat_id = &"health_max"
+stat_id = &"vitalidad"
 delta = -8.0
 min_value = 10.0
 
@@ -23,7 +23,7 @@ flag_value_string = ""
 [sub_resource type="Resource" id="stat_normal_defense"]
 script = ExtResource("3_modstat")
 description = "La brutalidad de Raditz te forza a endurecer el cuerpo."
-stat_id = &"defense"
+stat_id = &"resistencia"
 delta = 3.0
 min_value = 1.0
 
@@ -37,14 +37,14 @@ flag_value_string = ""
 [sub_resource type="Resource" id="stat_high_strength"]
 script = ExtResource("3_modstat")
 description = "Tus músculos se adaptan al nivel de impacto de Raditz."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 5.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_high_health"]
 script = ExtResource("3_modstat")
 description = "Tu cuerpo aprende a absorber golpes devastadores."
-stat_id = &"health_max"
+stat_id = &"vitalidad"
 delta = 10.0
 min_value = 1.0
 
@@ -58,14 +58,14 @@ flag_value_string = ""
 [sub_resource type="Resource" id="stat_exc_strength"]
 script = ExtResource("3_modstat")
 description = "Raditz activa algo latente en ti."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 8.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_exc_ki"]
 script = ExtResource("3_modstat")
 description = "El combate despierta tu Ki interior."
-stat_id = &"ki_max"
+stat_id = &"ki"
 delta = 8.0
 min_value = 1.0
 

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_muten_roshi"
+display_name = "Escuela de la Tortuga Feliz"
+action_type = &"training"
+unlock_day = 10
+requires_unlock_flag = &""
+selection_weight = 1.2
+; Sin condiciones extra aún — Roshi buscando NPC femenino será Fase C
+conditions = []
+target_stats = [&"velocidad", &"vitalidad", &"intel_combate"]
+scale_stat_id = &"velocidad"
+scale_threshold = 80.0
+scale_max_bonus = 0.4
+base_gain = 1.3
+energy_cost = 2

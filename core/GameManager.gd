@@ -17,7 +17,7 @@ func _ready() -> void:
 
 func _initialize() -> void:
 	if SaveSystem.slot_exists(0):
-		var loaded = SaveSystem.load_character(0)  # CharacterData
+		var loaded = SaveSystem.load_character(0)
 		if loaded != null:
 			print("[GameManager] Partida cargada — Día %d." % loaded.current_day)
 			_launch_with_character(loaded)
@@ -34,13 +34,13 @@ func _start_character_creation() -> void:
 		_launch_with_character(_create_debug_character())
 		return
 
-	var screen = load(CHARACTER_CREATION_PATH).instantiate()  # CharacterCreationScreen
+	var screen = load(CHARACTER_CREATION_PATH).instantiate()
 	screen.name = "CharacterCreationScreen"
 	get_tree().root.add_child(screen)
 	screen.set_anchors_preset(Control.PRESET_FULL_RECT)
 	screen.character_confirmed.connect(_on_character_confirmed, CONNECT_ONE_SHOT)
 
-func _on_character_confirmed(data) -> void:  # data: CharacterData
+func _on_character_confirmed(data) -> void:
 	var screen := get_tree().root.get_node_or_null("CharacterCreationScreen")
 	if screen:
 		screen.queue_free()
@@ -48,7 +48,7 @@ func _on_character_confirmed(data) -> void:  # data: CharacterData
 
 # ── Punto único de arranque del loop ─────────────────────────────────────────
 
-func _launch_with_character(data) -> void:  # data: CharacterData
+func _launch_with_character(data) -> void:
 	if data == null:
 		push_error("GameManager._launch_with_character: data es null.")
 		return
@@ -58,7 +58,7 @@ func _launch_with_character(data) -> void:  # data: CharacterData
 	else:
 		_start_day_screen()
 
-# ── DayScreen ─────────────────────────────────────────────────────────────────
+# ── DayScreen ────────────────────────────────────────────────────────────────
 
 func _start_day_screen() -> void:
 	if not ResourceLoader.exists(DAY_SCREEN_PATH):
@@ -72,21 +72,16 @@ func _start_day_screen() -> void:
 
 	await get_tree().process_frame
 
-	var data = GameStateProvider.get_character_data()  # CharacterData
+	var data = GameStateProvider.get_character_data()
 	if data != null and data.current_day > 100:
 		EventBus.game_completed.emit(data)
 		return
 
 	DayManager.start_day()
 
-# ── Combate ───────────────────────────────────────────────────────────────────
-
-func start_combat(difficulty: float = 1.0) -> void:
-	CombatManager.start_combat(difficulty)
-
 # ── Debug loop ────────────────────────────────────────────────────────────────
 
-func _start_debug_loop(data) -> void:  # data: CharacterData
+func _start_debug_loop(data) -> void:
 	var loop      := DebugDayLoop.new()
 	loop.auto_days = debug_auto_days
 	loop.name      = "DebugDayLoop"
@@ -95,16 +90,18 @@ func _start_debug_loop(data) -> void:  # data: CharacterData
 
 # ── Personaje de debug ────────────────────────────────────────────────────────
 
-func _create_debug_character():  # → CharacterData
+func _create_debug_character():
 	var appearance        := AppearanceData.new()
 	appearance.body_scale  = 1.0
 	appearance.aura_color  = Color(1.0, 0.8, 0.0)
 
 	var build := BuildData.new()
-	build.stat_priority_weights[&"strength"] = 1.0
-	build.stat_priority_weights[&"ki_max"]   = 0.4
-	build.stat_priority_weights[&"speed"]    = 0.7
-	build.stat_priority_weights[&"defense"]  = 0.3
-	build.combat_style                       = &"striker"
+	build.stat_priority_weights[&"fuerza"]        = 1.0
+	build.stat_priority_weights[&"ki"]            = 0.4
+	build.stat_priority_weights[&"velocidad"]     = 0.7
+	build.stat_priority_weights[&"resistencia"]   = 0.3
+	build.stat_priority_weights[&"vitalidad"]     = 0.5
+	build.stat_priority_weights[&"intel_combate"] = 0.3
+	build.combat_style                             = &"striker"
 
 	return CharacterFactory.create("Kakarot", &"saiyan", appearance, build)

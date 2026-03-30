@@ -1,47 +1,14 @@
-[gd_resource type="Resource" script_class="EventAction" format=3 uid="uid://rival_challenge"]
+[gd_resource type="Resource" script_class="CombatEventAction" format=3 uid="uid://bxpp8kci17pb3"]
 
-[ext_resource type="Script" path="res://data/characters/events/EventAction.gd" id="1_ev"]
-[ext_resource type="Script" path="res://data/characters/actions/EventOutcome.gd" id="2_out"]
-
-[sub_resource type="Resource" id="out_victory"]
-script = ExtResource("2_out")
-narrative_key = "event.rival.victory"
-weight = 2.0
-stat_changes = {&"strength": 1.0}
-xp_gained = 30.0
-extra_data = {}
-
-[sub_resource type="Resource" id="out_narrow"]
-script = ExtResource("2_out")
-narrative_key = "event.rival.narrow_win"
-weight = 3.0
-stat_changes = {&"strength": 0.5, &"health_max": -2.0}
-xp_gained = 20.0
-extra_data = {}
-
-[sub_resource type="Resource" id="out_defeat"]
-script = ExtResource("2_out")
-narrative_key = "event.rival.defeat"
-weight = 2.0
-stat_changes = {&"health_max": -5.0, &"defense": -0.5}
-xp_gained = 8.0
-extra_data = {}
-
-[sub_resource type="Resource" id="out_crush"]
-script = ExtResource("2_out")
-narrative_key = "event.rival.crushing_defeat"
-weight = 0.5
-stat_changes = {&"health_max": -10.0, &"strength": -1.0}
-xp_gained = 5.0
-extra_data = {}
+[ext_resource type="Script" uid="uid://f8cwcibpc2w1" path="res://data/characters/actions/combat/CombatEventAction.gd" id="1_1c4f4"]
 
 [resource]
-script = ExtResource("1_ev")
+script = ExtResource("1_1c4f4")
 id = &"rival_challenge"
 display_name = "Desafío de un rival"
-description = "Un guerrero te reta. Puedes ganar experiencia valiosa... o salir maltrecho."
+description = "Un guerrero experimentado te reta. La brecha de poder es real. ¿Puedes superarla?"
 action_type = &"event"
-unlock_day = 1
+unlock_day = 15
 requires_unlock_flag = &""
 selection_weight = 1.2
-outcomes = [SubResource("out_victory"), SubResource("out_narrow"), SubResource("out_defeat"), SubResource("out_crush")]
+difficulty_factor = 1.5

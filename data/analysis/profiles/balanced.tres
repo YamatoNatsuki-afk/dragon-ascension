@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BuildProfile" format=3 uid="uid://build_profile_balanced"]
+
+[ext_resource type="Script" path="res://data/analysis/BuildProfile.gd" id="1_balanced"]
+
+[resource]
+script = ExtResource("1_balanced")
+id = &"balanced"
+display_name = "Balanced"
+description = "Sin especialización clara. Versátil pero sin pico dominante."
+required_high_stats = []
+penalized_stats = []
+threshold_high = 0.5
+profile_color = Color(0.7, 0.7, 0.7, 1.0)
+icon_id = &"balanced"

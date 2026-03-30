@@ -1,13 +1,25 @@
 [gd_resource type="Resource" script_class="EventAction" format=3 uid="uid://overtraining"]
 
 [ext_resource type="Script" path="res://data/characters/events/EventAction.gd" id="1_ev"]
-[ext_resource type="Script" path="res://data/characters/actions/EventOutcome.gd" id="2_out"]
+[ext_resource type="Script" path="res://data/actions/base/EventOutcome.gd" id="2_out"]
+
+; MIGRACIÓN v2:
+;   health_max → vitalidad  (el cuerpo se resiente, pero no pierde stats brutos)
+;   strength   → fuerza
+;
+; DISEÑO Dragon Ball:
+;   injury     → fuerza -0.5, vitalidad -0.3  (lesión real, pequeña)
+;   rest_forced → sin cambio de stats, solo XP (el cuerpo recupera)
+;   breakthrough → vitalidad +0.5  (superaste el límite, tu cuerpo es más fuerte)
+;
+; Los valores son pequeños intencionalmente: el sobreentrenamiento
+; es un revés temporal, no una catástrofe permanente.
 
 [sub_resource type="Resource" id="out_injury"]
 script = ExtResource("2_out")
 narrative_key = "event.overtraining.injury"
 weight = 3.0
-stat_changes = {&"health_max": -8.0, &"strength": -0.5}
+stat_changes = {&"fuerza": -0.5, &"vitalidad": -0.3}
 xp_gained = 0.0
 extra_data = {}
 
@@ -23,7 +35,7 @@ extra_data = {}
 script = ExtResource("2_out")
 narrative_key = "event.overtraining.breakthrough"
 weight = 1.0
-stat_changes = {&"health_max": 3.0}
+stat_changes = {&"vitalidad": 0.5}
 xp_gained = 15.0
 extra_data = {}
 

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BuildProfile" format=3 uid="uid://build_profile_ki_user"]
+
+[ext_resource type="Script" path="res://data/analysis/BuildProfile.gd" id="1_ki_user"]
+
+[resource]
+script = ExtResource("1_ki_user")
+id = &"ki_user"
+display_name = "Ki User"
+description = "Ki y Control. El camino de las técnicas de energía."
+required_high_stats = [&"ki", &"poder_ki", &"velocidad"]
+penalized_stats = [&"fuerza", &"resistencia"]
+threshold_high = 0.7
+profile_color = Color(0.1, 0.5, 1.0, 1.0)
+icon_id = &"ki_user"

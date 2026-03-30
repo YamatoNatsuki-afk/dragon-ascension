@@ -1,3 +1,14 @@
-[gd_resource type="Resource" format=3 uid="uid://sc088g54cqq3"]
+[gd_resource type="Resource" script_class="CombatEventAction" format=3 uid="uid://sc088g54cqq3"]
+
+[ext_resource type="Script" uid="uid://f8cwcibpc2w1" path="res://data/characters/actions/combat/CombatEventAction.gd" id="1_0kqqw"]
 
 [resource]
+script = ExtResource("1_0kqqw")
+id = &"rival_encounter"
+display_name = "Encuentro con un rival"
+description = "Un guerrero de tu nivel cruza tu camino. Una buena oportunidad para medir fuerzas."
+action_type = &"event"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.2
+difficulty_factor = 1.0

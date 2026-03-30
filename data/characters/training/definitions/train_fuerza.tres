@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_fuerza"
+display_name = "Entrenamiento de fuerza"
+action_type = &"training"
+unlock_day = 1
+requires_unlock_flag = &""
+selection_weight = 1.2
+; Secundario: resistencia — golpear repetidamente endurece el cuerpo.
+; El jugador que no prioriza resistencia recibe ~38% del gain primario.
+target_stats = [&"fuerza", &"resistencia"]
+base_gain = 1.8
+energy_cost = 1

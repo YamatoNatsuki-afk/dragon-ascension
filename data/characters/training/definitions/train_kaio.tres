@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+[ext_resource type="Script" path="res://data/characters/actions/conditions/ActionCondition.gd" id="2"]
+
+[sub_resource type="Resource" id="cond_tournament"]
+script = ExtResource("2")
+type = 1
+flag_id = &"arc_tournament"
+
+; Camino de la Serpiente: necesitás velocidad para llegar en tiempo
+[sub_resource type="Resource" id="cond_vel"]
+script = ExtResource("2")
+type = 3
+stat_id = &"velocidad"
+value_float = 60.0
+
+[resource]
+script = ExtResource("1")
+id = &"train_kaio"
+display_name = "Entrenamiento con el Maestro Kaio"
+action_type = &"training"
+unlock_day = 50
+requires_unlock_flag = &""
+selection_weight = 1.4
+conditions = [SubResource("cond_tournament"), SubResource("cond_vel")]
+target_stats = [&"velocidad", &"inteligencia", &"intel_combate"]
+scale_stat_id = &"velocidad"
+scale_threshold = 100.0
+scale_max_bonus = 0.5
+base_gain = 1.6
+energy_cost = 2

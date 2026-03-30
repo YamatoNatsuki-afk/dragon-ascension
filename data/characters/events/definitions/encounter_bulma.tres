@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="NpcEncounterAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/events/NpcEncounterAction.gd" id="1"]
+[ext_resource type="Script" path="res://data/characters/events/NpcEncounterOutcome.gd" id="2"]
+
+; Outcome 1: Bulma te presenta a Roshi directamente (más probable)
+[sub_resource type="Resource" id="outcome_roshi"]
+script = ExtResource("2")
+narrative_key = &"npc.bulma.presents_roshi"
+description   = "Bulma insiste en presentarte al Maestro Roshi. 'Es raro y viejo, pero nadie sabe más de artes marciales.'"
+weight        = 3.0
+stat_changes  = {}
+xp_gained     = 20.0
+flags_to_set  = [&"npc_known_bulma", &"npc_roshi_intro"]
+
+; Outcome 2: Solo conocés a Bulma, Roshi requiere seguimiento
+[sub_resource type="Resource" id="outcome_bulma"]
+script = ExtResource("2")
+narrative_key = &"npc.bulma.friendly"
+description   = "Bulma parece interesada en tus progresos. Promete presentarte a alguien que podría ayudarte."
+weight        = 2.0
+stat_changes  = {&"inteligencia": 0.5}
+xp_gained     = 10.0
+flags_to_set  = [&"npc_known_bulma"]
+
+; Outcome 3: Bulma te desafía intelectualmente
+[sub_resource type="Resource" id="outcome_tech"]
+script = ExtResource("2")
+narrative_key = &"npc.bulma.technical"
+description   = "Bulma analiza tus técnicas de combate con su escáner. Sus observaciones son sorprendentemente útiles."
+weight        = 1.0
+stat_changes  = {&"inteligencia": 1.0, &"intel_combate": 0.5}
+xp_gained     = 15.0
+flags_to_set  = [&"npc_known_bulma"]
+
+[resource]
+script           = ExtResource("1")
+id               = &"encounter_bulma"
+display_name     = "Encuentro con Bulma"
+action_type      = &"event"
+display_category = &"event"
+unlock_day       = 1
+requires_unlock_flag = &""
+selection_weight = 1.5
+conditions       = []
+npc_id           = &"bulma"
+npc_name         = "Bulma Brief"
+completion_flag  = &"npc_known_bulma"
+outcomes         = [SubResource("outcome_roshi"), SubResource("outcome_bulma"), SubResource("outcome_tech")]

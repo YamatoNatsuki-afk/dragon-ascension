@@ -10,14 +10,14 @@
 [sub_resource type="Resource" id="stat_low_hp"]
 script = ExtResource("3_modstat")
 description = "Nappa te fractura varias costillas."
-stat_id = &"health_max"
+stat_id = &"vitalidad"
 delta = -15.0
 min_value = 10.0
 
 [sub_resource type="Resource" id="stat_low_str"]
 script = ExtResource("3_modstat")
 description = "La diferencia de fuerza deja marca psicológica."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = -3.0
 min_value = 1.0
 
@@ -31,14 +31,14 @@ flag_value_string = ""
 [sub_resource type="Resource" id="stat_normal_def"]
 script = ExtResource("3_modstat")
 description = "Sobrevivir a Nappa endurece cualquier cuerpo."
-stat_id = &"defense"
+stat_id = &"resistencia"
 delta = 4.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_normal_hp"]
 script = ExtResource("3_modstat")
 description = "Tu resistencia crece al límite de lo humano."
-stat_id = &"health_max"
+stat_id = &"vitalidad"
 delta = 5.0
 min_value = 1.0
 
@@ -52,14 +52,14 @@ flag_value_string = ""
 [sub_resource type="Resource" id="stat_high_str"]
 script = ExtResource("3_modstat")
 description = "El combate con Nappa lleva tu fuerza a un nuevo nivel."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 7.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_high_speed"]
 script = ExtResource("3_modstat")
 description = "Aprendes a esquivar impactos que te destruirían."
-stat_id = &"speed"
+stat_id = &"velocidad"
 delta = 5.0
 min_value = 1.0
 
@@ -80,21 +80,21 @@ flag_value_string = ""
 [sub_resource type="Resource" id="stat_exc_all_str"]
 script = ExtResource("3_modstat")
 description = "Nappa activa una reserva de poder que no sabías que tenías."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 10.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_exc_all_ki"]
 script = ExtResource("3_modstat")
 description = "La victoria libera Ki reprimido."
-stat_id = &"ki_max"
+stat_id = &"ki"
 delta = 10.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_exc_all_def"]
 script = ExtResource("3_modstat")
 description = "Tu cuerpo alcanza una dureza excepcional."
-stat_id = &"defense"
+stat_id = &"resistencia"
 delta = 6.0
 min_value = 1.0
 

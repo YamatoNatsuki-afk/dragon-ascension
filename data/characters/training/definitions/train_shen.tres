@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_shen"
+display_name = "Técnicas del Maestro Shen"
+action_type = &"training"
+unlock_day = 20
+requires_unlock_flag = &""
+selection_weight = 1.1
+; Estilo Grulla — ataques precisos con ki, velocidad explosiva y lectura del enemigo.
+; Shen enseña técnicas que bordean lo sucio, pero son efectivas.
+; Combinación rara de velocidad + poder_ki + intel_combate que ningún otro maestro da.
+target_stats = [&"velocidad", &"poder_ki", &"intel_combate"]
+base_gain = 1.5
+energy_cost = 1

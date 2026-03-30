@@ -1,28 +1,74 @@
-# res://data/actions/base/DayAction.gd
-# Resource base para todas las acciones del día.
-# ARCHIVO CANÓNICO — el único con class_name DayAction.
-# Eliminar: res://data/characters/actions/DayAction.gd
+# res://data/characters/actions/DayAction.gd
+#
+# Clase base de todas las acciones del loop de 100 días.
+# No contiene lógica de gameplay — solo define la interfaz y los campos comunes.
+#
+# SISTEMA DE CONDICIONES:
+#   El campo legacy `unlock_day` y `requires_unlock_flag` siguen funcionando.
+#   El nuevo array `conditions` añade condiciones adicionales evaluadas con AND.
+#   Esto permite migrar gradualmente sin romper los .tres existentes.
+#
+#   Ejemplo de acción con condición compuesta:
+#     unlock_day = 25
+#     conditions = [
+#       FLAG_SET  "survived_raditz",
+#       STAT_MIN  "velocidad" >= 30.0
+#     ]
+#   → se desbloquea en día 25+ Y tiene el flag Y tiene velocidad >= 30
+
 class_name DayAction
 extends Resource
 
-@export var id: StringName
-@export var display_name: String
-@export var description: String
-@export var action_type: StringName = &"generic"
-@export var unlock_day: int = 1
-@export var requires_unlock_flag: StringName = &""
+@export var id:            StringName = &""
+@export var display_name:  String     = ""
+@export var action_type:   StringName = &"generic"
 
-# Peso BASE de selección. ActionSelector lo multiplica por afinidad de build.
-# 0.0 = nunca elegido automáticamente (pero visible en lista manual).
+## Legacy — se preserva para compatibilidad con .tres existentes.
+## Equivalente a agregar una condición DAY_MIN con este valor.
+@export var unlock_day:            int        = 1
+
+## Legacy — se preserva para compatibilidad con .tres existentes.
+## Equivalente a agregar una condición FLAG_SET con este flag_id.
+@export var requires_unlock_flag:  StringName = &""
+
+## Peso base de aparición en el selector de acciones.
+## El ActionSelector lo multiplica por modificadores de build y flags.
 @export var selection_weight: float = 1.0
 
-## ¿Puede el jugador elegir esta acción en el contexto actual?
-## Override en subclases para condiciones más complejas.
-func is_available(ctx: DayContext) -> bool:
-	return ctx.day_number >= unlock_day
+## Condiciones adicionales evaluadas con AND.
+## Todas deben ser verdaderas para que la acción esté disponible.
+## Se usan junto con unlock_day / requires_unlock_flag — no los reemplazan.
+@export var conditions: Array[ActionCondition] = []
 
-## Ejecuta la acción y devuelve su resultado.
-## NUNCA modifica CharacterData directamente — toda mutación va en el Result.
+# ─────────────────────────────────────────────────────────────────────────────
+# API pública
+# ─────────────────────────────────────────────────────────────────────────────
+
+## Retorna true si la acción está disponible en el contexto dado.
+## Evalúa unlock_day, requires_unlock_flag Y todas las condiciones del array.
+func is_available(ctx: DayContext) -> bool:
+	# Check legacy unlock_day
+	if ctx.day_number < unlock_day:
+		return false
+
+	# Check legacy requires_unlock_flag
+	if requires_unlock_flag != &"":
+		if not ctx.character_data.saved_flags.get(requires_unlock_flag, false):
+			return false
+
+	# Check condiciones adicionales (AND implícito)
+	for cond: ActionCondition in conditions:
+		if not cond.evaluate(ctx):
+			return false
+
+	return true
+
+## Descripción corta para UI — override en subclases si hace falta.
+func get_description() -> String:
+	return display_name
+
+## Ejecuta la acción y retorna el resultado.
+## Debe ser sobreescrito por cada subclase.
 func execute(_ctx: DayContext) -> DayActionResult:
-	push_error("DayAction '%s': execute() no implementado." % id)
+	push_error("DayAction.execute() no implementado en '%s'" % id)
 	return DayActionResult.new()

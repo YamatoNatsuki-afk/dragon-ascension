@@ -1,3 +1,12 @@
 [gd_scene format=3 uid="uid://dvy48akmdetdb"]
 
+[ext_resource type="Script" uid="uid://dxlkhbl80csxo" path="res://scenes/combat_arena/CombatArena.gd" id="1_toxja"]
+[ext_resource type="PackedScene" uid="uid://duun16qf4vu5c" path="res://entities/player/Player.tscn" id="2_sjccu"]
+[ext_resource type="PackedScene" uid="uid://dhdlq32v5e7el" path="res://entities/Enemy/Enemy.tscn" id="3_vxerm"]
+
 [node name="CombatArena" type="Node2D" unique_id=827825274]
+script = ExtResource("1_toxja")
+
+[node name="Player" parent="." unique_id=1971594638 instance=ExtResource("2_sjccu")]
+
+[node name="Enemy" parent="." unique_id=293886328 instance=ExtResource("3_vxerm")]

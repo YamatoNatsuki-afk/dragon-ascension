@@ -8,14 +8,14 @@
 [sub_resource type="Resource" id="stat_low_all_hp"]
 script = ExtResource("3_modstat")
 description = "Freeza te deja en el límite de la existencia."
-stat_id = &"health_max"
+stat_id = &"vitalidad"
 delta = -30.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_low_all_def"]
 script = ExtResource("3_modstat")
 description = "Tu defensa, insuficiente contra el poder de Freeza."
-stat_id = &"defense"
+stat_id = &"resistencia"
 delta = -5.0
 min_value = 1.0
 
@@ -29,14 +29,14 @@ flag_value_string = "defeat"
 [sub_resource type="Resource" id="stat_normal_str"]
 script = ExtResource("3_modstat")
 description = "100 días de entrenamiento se cristalizan en músculo puro."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 5.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_normal_ki"]
 script = ExtResource("3_modstat")
 description = "Tu Ki, más controlado que nunca al final del camino."
-stat_id = &"ki_max"
+stat_id = &"ki"
 delta = 5.0
 min_value = 1.0
 
@@ -50,28 +50,28 @@ flag_value_string = "draw"
 [sub_resource type="Resource" id="stat_high_str"]
 script = ExtResource("3_modstat")
 description = "La pelea final forja stats que el entrenamiento solo no habría dado."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 12.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_high_ki"]
 script = ExtResource("3_modstat")
 description = "Tu Ki alcanza el nivel de un guerrero élite."
-stat_id = &"ki_max"
+stat_id = &"ki"
 delta = 12.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_high_speed"]
 script = ExtResource("3_modstat")
 description = "Tu velocidad de reacción ya no es humana."
-stat_id = &"speed"
+stat_id = &"velocidad"
 delta = 8.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_high_def"]
 script = ExtResource("3_modstat")
 description = "Absorber los ataques de Freeza te vuelve casi indestructible."
-stat_id = &"defense"
+stat_id = &"resistencia"
 delta = 8.0
 min_value = 1.0
 
@@ -85,35 +85,35 @@ flag_value_string = "victory"
 [sub_resource type="Resource" id="stat_exc_str"]
 script = ExtResource("3_modstat")
 description = "El pico de 100 días de voluntad pura."
-stat_id = &"strength"
+stat_id = &"fuerza"
 delta = 20.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_exc_ki"]
 script = ExtResource("3_modstat")
 description = "Tu Ki rebasa lo que cualquier entrenador habría predicho."
-stat_id = &"ki_max"
+stat_id = &"ki"
 delta = 20.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_exc_speed"]
 script = ExtResource("3_modstat")
 description = "Velocidad que desafía la física convencional."
-stat_id = &"speed"
+stat_id = &"velocidad"
 delta = 15.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_exc_def"]
 script = ExtResource("3_modstat")
 description = "Defensa impenetrable. Freeza no te rompió."
-stat_id = &"defense"
+stat_id = &"resistencia"
 delta = 12.0
 min_value = 1.0
 
 [sub_resource type="Resource" id="stat_exc_hp"]
 script = ExtResource("3_modstat")
 description = "Cien días de resistencia máxima."
-stat_id = &"health_max"
+stat_id = &"vitalidad"
 delta = 20.0
 min_value = 1.0
 

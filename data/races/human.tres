@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="RaceDefinition" format=3 uid="uid://human_race_def"]
+
+[ext_resource type="Script" path="res://data/races/RaceDefinition.gd" id="1_human"]
+
+[resource]
+script = ExtResource("1_human")
+id = &"human"
+display_name = "Humano"
+description = "Resistentes y adaptables. Stats equilibrados con bonus de XP e inteligencia que reflejan su capacidad de aprendizaje acelerado."
+stat_multipliers = {
+&"fuerza":        1.0,
+&"velocidad":     1.0,
+&"ki":            1.1,
+&"vitalidad":     1.0,
+&"resistencia":   1.0,
+&"poder_ki":      1.0,
+&"inteligencia":  1.2,
+&"intel_combate": 1.1
+}
+racial_traits = [&"fast_learner", &"iron_will"]
+xp_multiplier = 1.3
+default_aura_color = Color(0.2, 0.6, 1.0, 1.0)

@@ -20,14 +20,50 @@ config/icon="res://icon.svg"
 EventBus="*uid://btktmj8402krg"
 FlagSystem="*uid://5h3a3rsg143n"
 StatRegistry="*uid://buvwghx1kye4f"
+ActionRegistry="*uid://0lqv3ayhpsvm"
+CheckpointSystem="*uid://b702rf12gwyxt"
+DayManager="*uid://bvahr5l1g8rq0"
 SaveSystem="*uid://dhew08vkfhv1y"
 RaceRegistry="*uid://ccu18giwxfak4"
-ActionRegistry="*uid://0lqv3ayhpsvm"
 GameStateProvider="*uid://3bhlq8pu0h7k"
-DayManager="*uid://bvahr5l1g8rq0"
-CheckpointSystem="*uid://b702rf12gwyxt"
 GameManager="*uid://68kxdfagjow8"
 CombatManager="*uid://dkgendfe2bj4s"
+NpcSystem="*uid://wv7vxi8cdep5"
+TransformationSystem="*uid://blgfim8yfuxnu"
+MinigameRecordSystem="*uid://886pnbqql7y0"
+
+[input]
+
+move_left={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":65,"key_label":0,"unicode":97,"location":0,"echo":false,"script":null)
+]
+}
+move_right={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":68,"key_label":0,"unicode":100,"location":0,"echo":false,"script":null)
+]
+}
+move_up={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":87,"key_label":0,"unicode":119,"location":0,"echo":false,"script":null)
+]
+}
+move_down={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":83,"key_label":0,"unicode":115,"location":0,"echo":false,"script":null)
+]
+}
+attack={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":90,"key_label":0,"unicode":122,"location":0,"echo":false,"script":null)
+]
+}
+ki_blast={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":88,"key_label":0,"unicode":120,"location":0,"echo":false,"script":null)
+]
+}
 
 [physics]
 

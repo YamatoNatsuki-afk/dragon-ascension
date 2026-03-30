@@ -4,9 +4,9 @@
 extends Node
 
 const PATHS: Array[String] = [
-	"res://data/actions/training/definitions/",
-	"res://data/actions/events/definitions/",
-	"res://data/actions/combat/definitions/",
+	"res://data/characters/training/definitions/",
+	"res://data/characters/events/definitions/",
+	"res://data/characters/actions/combat/definitions/",
 ]
 
 var _all_actions: Array[DayAction] = []
@@ -52,18 +52,16 @@ func _load_from_folder(folder: String) -> void:
 
 # ─────────────────────────────────────────────
 # Fallback — set mínimo creado en código
-# Se activa solo si no hay ningún .tres cargado.
-# Garantiza que el prototipo siempre sea ejecutable.
 # ─────────────────────────────────────────────
 
 func _register_fallback_actions() -> void:
-	_add_training(&"train_strength",     "Entrenamiento de fuerza",    [&"strength"],           2.0, 1)
-	_add_training(&"train_speed",        "Entrenamiento de velocidad", [&"speed"],              2.0, 1)
-	_add_training(&"train_ki",           "Meditación de ki",           [&"ki_max"],             2.0, 1)
-	_add_training(&"train_defense",      "Entrenamiento defensivo",    [&"defense"],            2.0, 1)
-	_add_training(&"train_constitution", "Acondicionamiento físico",   [&"health_max"],         2.5, 1)
-	_add_training(&"train_combat",       "Combate integral",           [&"strength",&"speed"],  1.2, 5)
-	_add_training(&"train_ki_control",   "Control de ki en movimiento",[&"ki_max",&"speed"],    1.2, 10)
+	_add_training(&"train_strength",     "Entrenamiento de fuerza",    [&"fuerza"],                   2.0, 1)
+	_add_training(&"train_speed",        "Entrenamiento de velocidad", [&"velocidad"],                2.0, 1)
+	_add_training(&"train_ki",           "Meditación de ki",           [&"ki"],                       2.0, 1)
+	_add_training(&"train_defense",      "Entrenamiento defensivo",    [&"resistencia"],              2.0, 1)
+	_add_training(&"train_constitution", "Acondicionamiento físico",   [&"vitalidad"],                2.5, 1)
+	_add_training(&"train_combat",       "Combate integral",           [&"fuerza", &"velocidad"],     1.2, 5)
+	_add_training(&"train_ki_control",   "Control de ki avanzado",     [&"ki", &"poder_ki"],          1.2, 10)
 	_add_event_rival()
 	_add_event_overtraining()
 
@@ -77,7 +75,7 @@ func _add_training(p_id: StringName, p_name: String, p_stats: Array[StringName],
 	a.selection_weight  = 1.2 if p_stats.size() == 1 else 1.0
 	a.target_stats      = p_stats
 	a.base_gain         = p_gain
-	a.energy_cost       = 1 if p_stats.size() == 1 else 2
+	a.energy_cost       = 1
 	_register(a)
 
 func _add_event_rival() -> void:
@@ -90,15 +88,15 @@ func _add_event_rival() -> void:
 
 	var o1 := EventOutcome.new()
 	o1.narrative_key = "event.rival.victory"
-	o1.weight = 2.0; o1.stat_changes = {&"strength": 1.0}; o1.xp_gained = 30.0
+	o1.weight = 2.0; o1.stat_changes = {&"fuerza": 1.0}; o1.xp_gained = 30.0
 
 	var o2 := EventOutcome.new()
 	o2.narrative_key = "event.rival.narrow_win"
-	o2.weight = 3.0; o2.stat_changes = {&"strength": 0.5, &"health_max": -2.0}; o2.xp_gained = 20.0
+	o2.weight = 3.0; o2.stat_changes = {&"fuerza": 0.5, &"vitalidad": -2.0}; o2.xp_gained = 20.0
 
 	var o3 := EventOutcome.new()
 	o3.narrative_key = "event.rival.defeat"
-	o3.weight = 2.0; o3.stat_changes = {&"health_max": -5.0, &"defense": -0.5}; o3.xp_gained = 8.0
+	o3.weight = 2.0; o3.stat_changes = {&"vitalidad": -5.0, &"resistencia": -0.5}; o3.xp_gained = 8.0
 
 	a.outcomes = [o1, o2, o3]
 	_register(a)
@@ -113,15 +111,15 @@ func _add_event_overtraining() -> void:
 
 	var o1 := EventOutcome.new()
 	o1.narrative_key = "event.overtraining.injury"
-	o1.weight = 3.0; o1.stat_changes = {&"health_max": -8.0, &"strength": -0.5}; o1.xp_gained = 0.0
+	o1.weight = 3.0; o1.stat_changes = {&"vitalidad": -8.0, &"fuerza": -0.5}; o1.xp_gained = 0.0
 
 	var o2 := EventOutcome.new()
-	o2.narrative_key = "event.overtraining.rest"
+	o2.narrative_key = "event.overtraining.rest_forced"
 	o2.weight = 4.0; o2.stat_changes = {}; o2.xp_gained = 2.0
 
 	var o3 := EventOutcome.new()
 	o3.narrative_key = "event.overtraining.breakthrough"
-	o3.weight = 1.0; o3.stat_changes = {&"health_max": 3.0}; o3.xp_gained = 15.0
+	o3.weight = 1.0; o3.stat_changes = {&"vitalidad": 3.0}; o3.xp_gained = 15.0
 
 	a.outcomes = [o1, o2, o3]
 	_register(a)
@@ -134,14 +132,14 @@ func _register(action: DayAction) -> void:
 # API pública
 # ─────────────────────────────────────────────
 
+## Retorna las acciones disponibles para el contexto dado.
+## DayAction.is_available() ya evalúa unlock_day, requires_unlock_flag
+## y el array conditions — no es necesario chequearlo aquí también.
 func get_available(ctx: DayContext) -> Array[DayAction]:
 	var result: Array[DayAction] = []
 	for action: DayAction in _all_actions:
 		if not action.is_available(ctx):
 			continue
-		if action.requires_unlock_flag != &"":
-			if not FlagSystem.has(action.requires_unlock_flag):
-				continue
 		result.append(action)
 	_inject_active_events(result, ctx.day_number)
 	return result

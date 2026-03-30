@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TrainingAction" format=3]
+
+[ext_resource type="Script" path="res://data/characters/training/TrainingAction.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"train_poder_ki"
+display_name = "Control de ki avanzado"
+action_type = &"training"
+unlock_day = 10
+requires_unlock_flag = &""
+selection_weight = 1.2
+target_stats = [&"ki", &"poder_ki"]
+base_gain = 1.5
+energy_cost = 1

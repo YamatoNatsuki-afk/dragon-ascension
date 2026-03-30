@@ -8,13 +8,18 @@ enum Phase { IDLE, DAY_START, AWAITING_ACTION, EXECUTING, RESOLVING, DAY_END }
 var phase: Phase = Phase.IDLE
 var current_day: int = 0
 
+## Multiplicador de entrenamiento seteado por DayScreen antes de execute_action().
+## TrainingAction.execute() lo lee y lo resetea a 1.0 después de aplicarlo.
+## Permite que el minijuego modifique las ganancias sin romper el state machine.
+var pending_training_multiplier: float = 1.0
+
 var _character_data  # CharacterData
 
 @export var enable_debug_log: bool = true
 
 var _stats_before: Dictionary = {}
 
-# [B1 FIX] Contexto único por día — ver DayContext.gd
+# Contexto único por día — ver DayContext.gd
 var _current_ctx: DayContext = null
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -49,9 +54,21 @@ func start_day() -> void:
 	_current_ctx  = DayContext.create(_character_data)
 	var available := ActionRegistry.get_available(_current_ctx)
 
+	# ── Inyectar acciones dinámicas de aliados NPC ────────────────────────────
+	# Se crean en runtime — no están en el ActionRegistry estático.
+	var npc_sys := get_node_or_null("/root/NpcSystem")
+	if npc_sys != null:
+		var allies: Array = npc_sys.get_active_allies(_character_data)
+		for def in allies:
+			var npc_action := NpcTrainingAction.new(def)
+			available.append(npc_action)
+
 	phase = Phase.AWAITING_ACTION
 	EventBus.day_actions_ready.emit(available)
 
+## Punto de entrada desde DayScreen o debug_run_simulation.
+## Si la acción es CombatEventAction, lanza combate real y aguarda resultado.
+## Si es cualquier otra acción, ejecuta de forma síncrona como antes.
 func execute_action(action) -> void:  # action: DayAction
 	if phase != Phase.AWAITING_ACTION:
 		push_error("DayManager.execute_action: fase incorrecta '%s'." \
@@ -66,7 +83,38 @@ func execute_action(action) -> void:  # action: DayAction
 
 	phase = Phase.EXECUTING
 
-	var result = action.execute(_current_ctx)  # DayActionResult
+	if action is CombatEventAction:
+		# Path asíncrono — lanza combate real y espera resultado.
+		# _execute_combat() emite day_ended al terminar, igual que el path síncrono.
+		await _execute_combat(action as CombatEventAction)
+	else:
+		# Path síncrono — sin cambios respecto a la versión anterior.
+		var result = action.execute(_current_ctx)  # DayActionResult
+		phase = Phase.RESOLVING
+		_resolve(action, result)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COMBATE REAL — path asíncrono
+# ─────────────────────────────────────────────────────────────────────────────
+
+## Lanza un combate real y espera su resultado antes de resolver el día.
+##
+## Por qué await aquí y no en execute_action():
+##   Mantener execute_action() más simple — el detalle del await queda encapsulado.
+##   Si en el futuro hay más tipos de acciones asíncronas, se agrega otro método privado.
+##
+## Por qué CombatManager emite combat_result_ready incluso en error:
+##   Para garantizar que este await nunca quede colgado, sin importar
+##   si CombatScene existe o no. El loop de días siempre avanza.
+func _execute_combat(action: CombatEventAction) -> void:
+	CombatManager.start_combat(action.difficulty_factor)
+
+	# La ejecución se pausa aquí limpiamente — el hilo principal no bloquea.
+	# CombatScene emite combat_ended → CombatManager procesa → emite combat_result_ready.
+	var won: bool = await EventBus.combat_result_ready
+
+	# Convertir el resultado del combate real a DayActionResult usando los datos del día.
+	var result: DayActionResult = action.build_result(won, _current_ctx)
 
 	phase = Phase.RESOLVING
 	_resolve(action, result)
@@ -216,6 +264,44 @@ func _resolve(action, result) -> void:  # action: DayAction, result: DayActionRe
 		_character_data.base_stats[stat_id] = StatRegistry.clamp_stat(stat_id, current + delta)
 
 	_character_data.experience += result.xp_gained
+
+	# ── Level up ──────────────────────────────────────────────────────────────
+	# Recalcular nivel después de ganar XP.
+	# Por cada nivel ganado se otorga 1 punto de stat libre.
+	var new_level: int = CharacterData.level_from_xp(_character_data.experience)
+	if new_level > _character_data.level:
+		var levels_gained: int = new_level - _character_data.level
+		_character_data.level                 = new_level
+		_character_data.stat_points_available += levels_gained
+		# Emitir level_up solo si la señal está declarada en EventBus
+		if EventBus.has_signal("level_up"):
+			EventBus.level_up.emit(new_level, levels_gained)
+		if enable_debug_log:
+			print("[DayManager] ¡Level up! → Nivel %d  (+%d punto%s de stat)" % [
+				new_level, levels_gained, "s" if levels_gained > 1 else ""
+			])
+
+	# ── Aplicar flags del resultado (NpcEncounterAction, checkpoints, etc.) ──
+	# Se setean en saved_flags para disponibilidad inmediata en condiciones,
+	# y en FlagSystem si tiene el método set() para consistencia con el logging.
+	var result_flags: Array = result.get("flags_to_set") if result.get("flags_to_set") != null else []
+	for flag_id: StringName in result_flags:
+		_character_data.saved_flags[flag_id] = true
+		if FlagSystem.has_method("set_flag"):
+			FlagSystem.set_flag(flag_id, true)
+		elif FlagSystem.has_method("set"):
+			FlagSystem.set(flag_id, true)
+
+	# ── Verificar desbloqueos de transformación ───────────────────────────────
+	# Acceso por path para no depender del Autoload siendo reconocido en parseo.
+	var transform_sys := get_node_or_null("/root/TransformationSystem")
+	if transform_sys != null:
+		transform_sys.check_unlock_conditions(_character_data)
+
+	# ── Verificar condiciones de NPCs ─────────────────────────────────────────
+	var npc_sys := get_node_or_null("/root/NpcSystem")
+	if npc_sys != null:
+		npc_sys.check_npc_conditions(_character_data)
 
 	EventBus.day_action_resolved.emit(action, result)
 
