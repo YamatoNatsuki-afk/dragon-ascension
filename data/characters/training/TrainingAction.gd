@@ -97,11 +97,14 @@ func execute(ctx: DayContext) -> DayActionResult:
 		gain_final      = snappedf(gain_final, 0.1)
 		result.stat_changes[stat_id] = gain_final
 
-	# XP proporcional a la ganancia total
+	# XP proporcional a la ganancia total.
+	# FIX A1: Se eliminó el segundo reward_multiplier(day).
+	# total_gain ya incluye day_scale (= reward_multiplier) en su cálculo,
+	# por lo que multiplicarlo de nuevo causaba escala cuadrática (≈8x en día 100).
 	var total_gain: float = 0.0
 	for val: float in result.stat_changes.values():
 		total_gain += val
-	result.xp_gained     = total_gain * 10.0 * DifficultyScaler.reward_multiplier(ctx.day_number)
+	result.xp_gained = total_gain * 10.0
 
 	result.success       = true
 	result.narrative_key = "training.%s.success" % id

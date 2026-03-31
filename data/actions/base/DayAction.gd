@@ -27,6 +27,12 @@ extends Resource
 ## Equivalente a agregar una condición DAY_MIN con este valor.
 @export var unlock_day:            int        = 1
 
+## FIX A4: Día en el que esta acción deja de estar disponible.
+## 0 = nunca expira (comportamiento por defecto, compatible con .tres existentes).
+## Permite crear "ventanas de oportunidad": acciones disponibles solo entre días X e Y.
+## Ejemplo: expires_on_day = 60 hace que la acción desaparezca a partir del día 60.
+@export var expires_on_day:        int        = 0
+
 ## Legacy — se preserva para compatibilidad con .tres existentes.
 ## Equivalente a agregar una condición FLAG_SET con este flag_id.
 @export var requires_unlock_flag:  StringName = &""
@@ -49,6 +55,12 @@ extends Resource
 func is_available(ctx: DayContext) -> bool:
 	# Check legacy unlock_day
 	if ctx.day_number < unlock_day:
+		return false
+
+	# FIX A4: Check de expiración.
+	# Si expires_on_day > 0 y el día actual ya lo alcanzó, la acción no está disponible.
+	# El 0 por defecto garantiza compatibilidad total con .tres existentes que no definen este campo.
+	if expires_on_day > 0 and ctx.day_number >= expires_on_day:
 		return false
 
 	# Check legacy requires_unlock_flag

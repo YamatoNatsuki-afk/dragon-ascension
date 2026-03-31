@@ -283,14 +283,22 @@ func _resolve(action, result) -> void:  # action: DayAction, result: DayActionRe
 
 	# ── Aplicar flags del resultado (NpcEncounterAction, checkpoints, etc.) ──
 	# Se setean en saved_flags para disponibilidad inmediata en condiciones,
-	# y en FlagSystem si tiene el método set() para consistencia con el logging.
+	# y en FlagSystem para consistencia con el logging centralizado.
+	# FIX A2: Eliminado el bloque "elif FlagSystem.set()" que llamaba a Node.set(),
+	# lo que seteaba una propiedad del Autoload en vez de un flag de juego,
+	# corrompiendo datos silenciosamente. Ahora falla ruidosamente si el contrato
+	# no se cumple, para que el bug sea evidente durante desarrollo.
 	var result_flags: Array = result.get("flags_to_set") if result.get("flags_to_set") != null else []
 	for flag_id: StringName in result_flags:
 		_character_data.saved_flags[flag_id] = true
 		if FlagSystem.has_method("set_flag"):
 			FlagSystem.set_flag(flag_id, true)
-		elif FlagSystem.has_method("set"):
-			FlagSystem.set(flag_id, true)
+		else:
+			push_error(
+				"DayManager: FlagSystem no expone set_flag(). " +
+				"Flag '%s' guardado solo en saved_flags — FlagSystem desincronizado. " % str(flag_id) +
+				"Verifica que FlagSystem.gd declare 'func set_flag(id, val)'."
+			)
 
 	# ── Verificar desbloqueos de transformación ───────────────────────────────
 	# Acceso por path para no depender del Autoload siendo reconocido en parseo.

@@ -1,9 +1,9 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1774749538
+::res://::1774921625
 Estructura de carpetas.txt::TextFile::-1::1774310457::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::3773251899374337224::1774310294::1774310301::1::::<><><>0<>0<>4101c56352a5842907d17ff4b30cfdec<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md::TextFile::-1::1774324001::0::1::::<><><>0<>0<><>::
-::res://core/::1774749517
+::res://core/::1774920508
 ActionRegistry.gd::GDScript::1778439691555953030::1774689760::0::1::::<>Node<><>0<>0<><>::
 CharacterFactory.gd::GDScript::8926136804323304793::1774681317::0::1::::CharacterFactory<>RefCounted<><>0<>0<><>::
 CheckpointSystem.gd::GDScript::4685743145280042737::1774729199::0::1::::<>Node<><>0<>0<><>::

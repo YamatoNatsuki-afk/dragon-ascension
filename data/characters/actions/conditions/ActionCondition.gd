@@ -27,6 +27,11 @@ enum Type {
 	FLAG_SET,
 	FLAG_UNSET,
 	STAT_MIN,
+	## Verdadero si el performance_ratio actual del personaje es >= value_float.
+	## Calcula el ratio en el momento de la evaluación (sin caché).
+	## Usar con value_float = 2.0 para eventos que solo aparecen cuando el jugador
+	## va muy por encima de la curva esperada (ej: Desgaste por Poder).
+	PERFORMANCE_RATIO_MIN,
 	NPC_AVAILABLE,  # Fase C — siempre true por ahora
 	IS_DEAD,        # Fase D — siempre false por ahora
 	ALIGNMENT,      # Fase D — siempre true por ahora
@@ -66,6 +71,12 @@ func evaluate(ctx: DayContext) -> bool:
 
 		Type.STAT_MIN:
 			return ctx.character_data.base_stats.get(stat_id, 0.0) >= value_float
+
+		Type.PERFORMANCE_RATIO_MIN:
+			# PerformanceEvaluator es clase estática pura (RefCounted) — sin dependencia circular.
+			# Calcula: compute_power_score(data) / max(1.0, expected_score(day)).
+			var ratio := PerformanceEvaluator.performance_ratio(ctx.character_data)
+			return ratio >= value_float
 
 		Type.NPC_AVAILABLE:
 			# Fase C: cuando NpcRegistry exista, consultar aquí.

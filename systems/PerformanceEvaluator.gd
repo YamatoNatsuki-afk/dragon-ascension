@@ -71,4 +71,15 @@ static func grade_description(g: Grade, build_name: String) -> String:
 
 static func _expected_score(day: int) -> float:
 	var n := float(max(1, day))
-	return EXPECTED_POWER_PER_DAY * (n * log(n) - n + 1.0) * 1.2
+	var log_curve := EXPECTED_POWER_PER_DAY * (n * log(n) - n + 1.0) * 0.75
+	# Factor 0.75 (antes 1.2): calibrado por simulación de 300 runs.
+	# Con 1.2 el Casual obtenía ratio ×0.52 (grade LOW en todos los checkpoints).
+	# Con 0.75 el Casual alcanza ratio ×0.83 (NORMAL), el Defensive ×1.37 (HIGH)
+	# y el Striker ×2.6 (EXCEPTIONAL, con fricción por desgaste_por_poder).
+	# FIX A3: La curva logarítmica devuelve 0 en día 1 (log(1) = 0),
+	# lo que hacía que cualquier personaje recibiera grade EXCEPTIONAL trivialmente.
+	# Se añade un piso lineal suave: EXPECTED_POWER_PER_DAY * n * 0.8.
+	# En día 1 el piso vale 1.44, en días altos la curva log supera al piso
+	# y este maxf() deja de tener efecto → sin impacto en el balance de mid/late game.
+	var linear_floor := EXPECTED_POWER_PER_DAY * n * 0.8
+	return maxf(log_curve, linear_floor)

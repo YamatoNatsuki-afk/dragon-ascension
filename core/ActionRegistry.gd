@@ -64,6 +64,7 @@ func _register_fallback_actions() -> void:
 	_add_training(&"train_ki_control",   "Control de ki avanzado",     [&"ki", &"poder_ki"],          1.2, 10)
 	_add_event_rival()
 	_add_event_overtraining()
+	_add_event_desgaste()
 
 func _add_training(p_id: StringName, p_name: String, p_stats: Array[StringName],
 		p_gain: float, p_unlock: int) -> void:
@@ -107,6 +108,11 @@ func _add_event_overtraining() -> void:
 	a.display_name      = "Sobreentrenamiento"
 	a.action_type       = &"event"
 	a.unlock_day        = 1
+	# FIX A4: Expira en día 60 para evitar que en late game este evento
+	# (selection_weight más alto = 2.5, penaliza -8 vitalidad) destruya
+	# sistemáticamente builds defensivos en los días finales del run.
+	# Narrativamente: el personaje aprende a gestionar la carga de entrenamiento.
+	a.expires_on_day    = 60
 	a.selection_weight  = 2.5
 
 	var o1 := EventOutcome.new()
@@ -123,6 +129,64 @@ func _add_event_overtraining() -> void:
 
 	a.outcomes = [o1, o2, o3]
 	_register(a)
+
+func _add_event_desgaste() -> void:
+	# ── Evento principal: Desgaste por Poder ─────────────────────────────────
+	# Aparece solo cuando el jugador está muy por encima de la curva (ratio >= 2.0).
+	# Usa DesgasteEventAction para inyectar automáticamente el seguimiento.
+	var a                   := DesgasteEventAction.new()
+	a.id                     = &"desgaste_por_poder"
+	a.display_name           = "Desgaste por Poder"
+	a.action_type            = &"event"
+	a.unlock_day             = 15          # no aparece en los primeros días
+	a.selection_weight       = 1.5         # moderado — no monopoliza el pool
+	a.followup_event_id      = &"desgaste_seguimiento"
+	a.followup_duration      = 2           # hoy + 2 días eco = 3 días totales
+
+	# Condición: solo si performance_ratio >= 2.0
+	# Con el factor 0.75, el Striker supera 2.0 de forma consistente en mid/late game.
+	var cond_ratio           := ActionCondition.new()
+	cond_ratio.type           = ActionCondition.Type.PERFORMANCE_RATIO_MIN
+	cond_ratio.value_float    = 2.0
+	a.conditions              = [cond_ratio]
+
+	# Un solo outcome sin varianza — el desgaste siempre ocurre de la misma manera.
+	# Los valores se escalan por EventAction con challenge_multiplier(day):
+	#   Día 15: ×1.14  |  Día 50: ×1.49  |  Día 100: ×2.0
+	# → en late game el golpe es más fuerte, lo que tiene sentido narrativo.
+	var o1               := EventOutcome.new()
+	o1.narrative_key      = &"event.desgaste.crash"
+	o1.weight             = 1.0
+	o1.stat_changes       = {
+		&"velocidad":     -10.0,   # el cuerpo no puede sostener esa velocidad de crecimiento
+		&"intel_combate": -6.0,    # el instinto se embota por el agotamiento extremo
+		&"resistencia":   -5.0,    # la capacidad de aguantar daño cae
+	}
+	o1.xp_gained          = 5.0   # el dolor enseña — mínimo de XP
+	a.outcomes             = [o1]
+	_register(a)
+
+	# ── Evento de seguimiento: Eco del Desgaste (días 2 y 3) ─────────────────
+	# unlock_day = 9999 → nunca entra al pool de forma natural.
+	# Solo aparece cuando DesgasteEventAction lo inyecta vía FlagSystem.
+	# ActionRegistry._inject_active_events() lo detecta automáticamente.
+	var b               := EventAction.new()
+	b.id                 = &"desgaste_seguimiento"
+	b.display_name       = "Recuperación del Desgaste"
+	b.action_type        = &"event"
+	b.unlock_day         = 9999   # barrera de seguridad: nunca disponible de forma natural
+	b.selection_weight   = 2.0    # cuando está inyectado, tiene peso alto para que aparezca
+
+	var o2               := EventOutcome.new()
+	o2.narrative_key      = &"event.desgaste.recovery_partial"
+	o2.weight             = 1.0
+	o2.stat_changes       = {
+		&"velocidad":   -3.0,   # el cuerpo aún no se recupera del todo
+		&"resistencia": -2.0,
+	}
+	o2.xp_gained          = 3.0
+	b.outcomes             = [o2]
+	_register(b)
 
 func _register(action: DayAction) -> void:
 	_all_actions.append(action)
