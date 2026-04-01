@@ -1,5 +1,6 @@
 # res://resources/combat/enemy_data.gd
-class_name EnemyData
+# LEGACY — Reemplazado por data/enemies/EnemyData.gd
+# class_name removida para evitar conflicto con el nuevo EnemyData global.
 extends Resource
 
 @export var enemy_name: String = "Saibaman"

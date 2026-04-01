@@ -1,5 +1,9 @@
 # res://core/CombatManager.gd
 # Autoload. El puente entre el loop de días y el combate en tiempo real.
+#
+# v2: Conecta TransformationSystem al inicio/fin de cada combate.
+#   start_combat() → TransformationSystem.start_combat(player, data)
+#   _finish_combat() → TransformationSystem.end_combat()
 extends Node
 
 const COMBAT_SCENE_PATH := "res://scenes/combat_arena/CombatArena.tscn"
@@ -26,7 +30,7 @@ func start_combat(difficulty: float = 1.0) -> void:
 
 	_combat_active = true
 
-	_combat_scene = load(COMBAT_SCENE_PATH).instantiate()
+	_combat_scene      = load(COMBAT_SCENE_PATH).instantiate()
 	_combat_scene.name = "CombatArena"
 	get_tree().root.add_child(_combat_scene)
 
@@ -37,6 +41,13 @@ func start_combat(difficulty: float = 1.0) -> void:
 		return
 
 	player.setup(data)
+
+	# Conectar TransformationSystem al combate actual
+	var ts := get_node_or_null("/root/TransformationSystem")
+	if ts != null:
+		ts.start_combat(player, data)
+	else:
+		push_warning("[CombatManager] TransformationSystem no encontrado — transformaciones desactivadas.")
 
 	if not EventBus.combat_ended.is_connected(_on_combat_ended):
 		EventBus.combat_ended.connect(_on_combat_ended, CONNECT_ONE_SHOT)
@@ -67,13 +78,18 @@ func _on_combat_ended(won: bool) -> void:
 	_finish_combat(won)
 
 func _on_player_died() -> void:
-	if EventBus.combat_ended.is_connected(_on_combat_ended):
-		EventBus.combat_ended.disconnect(_on_combat_ended)
-	_finish_combat(false)
+	# No-op: CombatArena muestra el overlay de resultado y luego emite combat_ended.
+	pass
 
 func _finish_combat(won: bool) -> void:
 	if not _combat_active:
 		return
+
+	# Desconectar TransformationSystem — limpia modificadores y aplica penalización
+	var ts := get_node_or_null("/root/TransformationSystem")
+	if ts != null:
+		ts.end_combat()
+
 	print("[CombatManager] Combate terminado. Resultado: %s" % ("Victoria" if won else "Derrota"))
 	_unload_combat_scene()
 	_combat_active = false

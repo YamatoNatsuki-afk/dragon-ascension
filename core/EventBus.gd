@@ -58,6 +58,10 @@ signal combat_result_ready(won: bool)
 ## Emitida por entidades de combate al aplicar daño.
 signal damage_dealt(source, amount: float, type: StringName)
 
+## Emitida por AttackState al golpear y al romper el combo.
+## count=0 indica que el combo se rompió / expiró.
+signal combo_updated(count: int, multiplier: float)
+
 ## Emitida cuando el HP del jugador llega a 0.
 signal player_died()
 
@@ -112,3 +116,11 @@ signal minigame_record_broken(minigame_id: String, old_score: float, new_score: 
 
 ## Emitida por NpcSystem cuando cambia el estado de relación con un NPC.
 signal npc_relation_changed(npc_id: StringName, old_state: int, new_state: int, character_data)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ACCIONES / PROGRESIÓN DE CONTENIDO
+# ─────────────────────────────────────────────────────────────────────────────
+
+## Emitida por UnlockActionConsequence cuando se desbloquea una acción de día.
+## DayScreen puede usarla para mostrar "NUEVA ACCIÓN" al jugador.
+signal action_unlocked(action_id: StringName)

@@ -3,12 +3,15 @@
 [ext_resource type="Script" uid="uid://tvwtst4xd1qx" path="res://entities/player/Player.gd" id="1_mab2k"]
 [ext_resource type="Script" uid="uid://6t51ee18162i" path="res://entities/player/states/PlayerStateMachine.gd" id="2_453mm"]
 [ext_resource type="Script" uid="uid://dcvk601as0vc" path="res://entities/player/states/IdleState.gd" id="3_eaotn"]
-[ext_resource type="Script" uid="uid://bsisa1u6ot4ie" path="res://entities/player/states/MoveState.gd" id="4_g3lhm"]
+[ext_resource type="Script" uid="uid://613fsoxrs6vx" path="res://entities/player/states/KiChargeState.gd" id="4_2rv2u"]
 [ext_resource type="Script" uid="uid://bf5qdqt5khj5x" path="res://entities/player/states/AttackState.gd" id="5_4pwj0"]
 [ext_resource type="Script" uid="uid://d1dd8ho0sw50m" path="res://entities/player/states/HurtState.gd" id="6_fmb3c"]
+[ext_resource type="Script" uid="uid://d3vdn1nku012u" path="res://entities/player/states/KiBlastState.gd" id="7_ak4un"]
 [ext_resource type="Script" uid="uid://crw3yiorp2ry1" path="res://entities/player/components/StatsComponent.gd" id="7_q57vx"]
 [ext_resource type="Script" uid="uid://sc4c16vlcvhj" path="res://entities/player/components/HealthComponent.gd" id="8_ak4un"]
+[ext_resource type="Script" uid="uid://c718xbburj2ss" path="res://entities/player/states/TransformState.gd" id="8_mq27t"]
 [ext_resource type="Script" uid="uid://bxkbxrocehqst" path="res://entities/player/components/KiComponent.gd" id="9_1ms0h"]
+[ext_resource type="Script" uid="uid://mvw8vgkyrnx2" path="res://entities/player/states/FlyState.gd" id="9_kwk8g"]
 
 [node name="Player" type="CharacterBody2D" unique_id=1971594638]
 script = ExtResource("1_mab2k")
@@ -23,13 +26,29 @@ initial_state = NodePath("IdleState")
 script = ExtResource("3_eaotn")
 
 [node name="MoveState" type="Node" parent="PlayerStateMachine" unique_id=585057843]
-script = ExtResource("4_g3lhm")
+script = ExtResource("4_2rv2u")
 
 [node name="AttackState" type="Node" parent="PlayerStateMachine" unique_id=65861021]
 script = ExtResource("5_4pwj0")
 
 [node name="HurtState" type="Node" parent="PlayerStateMachine" unique_id=768446482]
 script = ExtResource("6_fmb3c")
+
+[node name="KiBlastState" type="Node" parent="PlayerStateMachine" unique_id=991901381]
+script = ExtResource("7_ak4un")
+metadata/_custom_type_script = "uid://d3vdn1nku012u"
+
+[node name="TransformState" type="Node" parent="PlayerStateMachine" unique_id=277648438]
+script = ExtResource("8_mq27t")
+metadata/_custom_type_script = "uid://c718xbburj2ss"
+
+[node name="FlyState" type="Node" parent="PlayerStateMachine" unique_id=403845117]
+script = ExtResource("9_kwk8g")
+metadata/_custom_type_script = "uid://mvw8vgkyrnx2"
+
+[node name="KiChargeState" type="Node" parent="PlayerStateMachine" unique_id=2057396667]
+script = ExtResource("4_2rv2u")
+metadata/_custom_type_script = "uid://613fsoxrs6vx"
 
 [node name="StatsComponent" type="Node" parent="." unique_id=1698841540]
 script = ExtResource("7_q57vx")

@@ -1,115 +1,92 @@
-# res://data/skills/SkillData.gd
-# Resource de solo datos. Define una habilidad de combate equipable.
-# Un .tres por habilidad, en data/skills/
+# res://data/equipment/EquipmentData.gd
+#
+# Resource del loadout de equipo del personaje.
+# Almacena QUÉ EquipmentItem tiene equipado en cada slot.
 #
 # DISEÑO:
-#   SkillData define QUÉ ES la habilidad y sus parámetros.
-#   La EJECUCIÓN real en combate (hitbox, animación, efectos) vive en
-#   el sistema de combate (Fase D) — SkillData solo provee los números.
-#   Esta separación permite iterar el balance sin tocar el código de combate.
+#   EquipmentItem define las propiedades de un ítem (inmutable).
+#   EquipmentData es el inventario activo del personaje — un slot por tipo.
+#   CharacterData incluye una referencia a este resource y SaveSystem lo persiste.
 #
-class_name SkillData
+# USO:
+#   var total := equipment.get_total_stat_bonus(&"fuerza")
+#   StatsComponent aplica estos bonos como modificadores al inicializar.
+#
+class_name EquipmentData
 extends Resource
 
-## Tipos de habilidad — determinan el slot y el estilo de uso.
-## Igual que Xenoverse: Strike (cuerpo a cuerpo), Ki Blast (proyectil),
-## Support (buff/heal), Ultimate (habilidad especial de alto costo).
-enum SkillType {
-	STRIKE,     # Ataque físico mejorado — bajo costo de Ki, alto daño físico
-	KI_BLAST,   # Proyectil de energía — costo medio de Ki, daño mágico
-	SUPPORT,    # Buff/curación — no hace daño directamente
-	ULTIMATE,   # Habilidad definitiva — alto costo, alto impacto
-}
-
-## Identificador único. Debe coincidir con el nombre del archivo .tres.
-## Ejemplo: &"kamehameha", &"masenko", &"wild_sense"
-@export var id: StringName = &""
-
-## Nombre visible en la UI.
-@export var display_name: String = ""
-
-## Descripción de la habilidad para el tooltip.
-@export_multiline var description: String = ""
-
-## Tipo de habilidad — determina en qué slot puede equiparse y cómo la usa el combate.
-@export var skill_type: SkillType = SkillType.STRIKE
+# Un slot por tipo de equipo. null = slot vacío.
+@export var top:       EquipmentItem = null
+@export var bottom:    EquipmentItem = null
+@export var gloves:    EquipmentItem = null
+@export var boots:     EquipmentItem = null
+@export var accessory: EquipmentItem = null
 
 # ─────────────────────────────────────────────────────────────────────────────
-# PARÁMETROS DE COMBATE
-# Estos valores los lee el sistema de combate en Fase D.
-# El diseñador los ajusta en el inspector sin tocar código.
+# API DE SLOTS
 # ─────────────────────────────────────────────────────────────────────────────
 
-## Costo de Ki para activar la habilidad.
-## 0.0 = no consume Ki (ataques físicos básicos mejorados).
-@export var ki_cost: float = 0.0
+## Devuelve el ítem equipado en el slot dado. null si está vacío.
+func get_item(slot: EquipmentItem.Slot) -> EquipmentItem:
+	match slot:
+		EquipmentItem.Slot.TOP:       return top
+		EquipmentItem.Slot.BOTTOM:    return bottom
+		EquipmentItem.Slot.GLOVES:    return gloves
+		EquipmentItem.Slot.BOOTS:     return boots
+		EquipmentItem.Slot.ACCESSORY: return accessory
+	return null
 
-## Multiplicador de daño sobre el stat base correspondiente.
-## Para STRIKE: multiplica sobre strength.
-## Para KI_BLAST: multiplica sobre ki_max (como proxy de poder ki).
-## Para SUPPORT: irrelevante (usar effect_value).
-## Para ULTIMATE: multiplica sobre el mayor stat del personaje.
-@export var damage_multiplier: float = 1.0
+## Equipa un ítem en su slot correspondiente.
+## Reemplaza cualquier ítem previo en ese slot.
+func equip(item: EquipmentItem) -> void:
+	if item == null:
+		return
+	match item.slot:
+		EquipmentItem.Slot.TOP:       top       = item
+		EquipmentItem.Slot.BOTTOM:    bottom    = item
+		EquipmentItem.Slot.GLOVES:    gloves    = item
+		EquipmentItem.Slot.BOOTS:     boots     = item
+		EquipmentItem.Slot.ACCESSORY: accessory = item
 
-## Valor del efecto para habilidades SUPPORT.
-## Ejemplo: heal = 30.0, defense_buff = 10.0.
-## Ignorado por STRIKE / KI_BLAST / ULTIMATE.
-@export var effect_value: float = 0.0
-
-## Cooldown en segundos. 0.0 = sin cooldown.
-@export var cooldown: float = 0.0
-
-## Número de hits que componen la habilidad.
-## El daño total se distribuye entre los hits.
-@export var hit_count: int = 1
-
-## Alcance de la habilidad. True = puede usarse a distancia.
-@export var is_ranged: bool = false
-
-# ─────────────────────────────────────────────────────────────────────────────
-# REQUISITOS DE DESBLOQUEO
-# En Fase D estos se validan contra CharacterData antes de mostrar la habilidad.
-# ─────────────────────────────────────────────────────────────────────────────
-
-## Stat mínimo requerido para poder equipar la habilidad.
-## {} = sin requisito.
-## Ejemplo: { &"ki_max": 100.0 } — necesitás 100 de Ki para equipar Kamehameha.
-@export var required_stats: Dictionary = {}
-
-## Día mínimo del run para que la habilidad esté disponible.
-## 0 = disponible desde el día 1.
-@export var unlock_day: int = 0
+## Desequipa el slot dado. Lo deja en null.
+func unequip(slot: EquipmentItem.Slot) -> void:
+	match slot:
+		EquipmentItem.Slot.TOP:       top       = null
+		EquipmentItem.Slot.BOTTOM:    bottom    = null
+		EquipmentItem.Slot.GLOVES:    gloves    = null
+		EquipmentItem.Slot.BOOTS:     boots     = null
+		EquipmentItem.Slot.ACCESSORY: accessory = null
 
 # ─────────────────────────────────────────────────────────────────────────────
-# VISUAL / UX
+# BONOS TOTALES
 # ─────────────────────────────────────────────────────────────────────────────
 
-## Identificador del icono para la UI (placeholder hasta tener assets).
-@export var icon_id: StringName = &""
+## Suma los bonos de todos los ítems equipados para un stat dado.
+## StatsComponent llama esto en initialize_from_data() para aplicar
+## los bonos de equipo como modificadores persistentes.
+func get_total_stat_bonus(stat_id: StringName) -> float:
+	var total: float = 0.0
+	for item in get_all_equipped():
+		total += item.stat_bonuses.get(stat_id, 0.0)
+	return total
 
-## Color representativo de la habilidad (para el marco del icono en la UI).
-@export var skill_color: Color = Color.WHITE
+## Devuelve un diccionario con la suma de TODOS los bonos de equipo.
+## Útil para la UI del vestidor (mostrar totales de una vez).
+func get_all_bonuses() -> Dictionary:
+	var result: Dictionary = {}
+	for item in get_all_equipped():
+		for stat_id: StringName in item.stat_bonuses.keys():
+			result[stat_id] = result.get(stat_id, 0.0) + item.stat_bonuses[stat_id]
+	return result
 
-# ─────────────────────────────────────────────────────────────────────────────
-# HELPERS
-# ─────────────────────────────────────────────────────────────────────────────
+## Retorna un array con todos los ítems actualmente equipados (sin nulls).
+func get_all_equipped() -> Array[EquipmentItem]:
+	var equipped: Array[EquipmentItem] = []
+	for item in [top, bottom, gloves, boots, accessory]:
+		if item != null:
+			equipped.append(item)
+	return equipped
 
-## Retorna el nombre del tipo de habilidad como string legible.
-func get_type_name() -> String:
-	match skill_type:
-		SkillType.STRIKE:   return "Combate"
-		SkillType.KI_BLAST: return "Ki"
-		SkillType.SUPPORT:  return "Soporte"
-		SkillType.ULTIMATE: return "Definitiva"
-	return ""
-
-## Retorna true si el personaje tiene los stats necesarios para equipar la habilidad.
-func can_equip(data: CharacterData) -> bool:
-	for stat_id: Variant in required_stats.keys():
-		var required: float = required_stats[stat_id]
-		var current: float  = data.base_stats.get(stat_id, 0.0)
-		if current < required:
-			return false
-	if unlock_day > 0 and data.current_day < unlock_day:
-		return false
-	return true
+## True si todos los slots están vacíos.
+func is_empty() -> bool:
+	return get_all_equipped().is_empty()

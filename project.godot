@@ -30,6 +30,7 @@ GameManager="*uid://68kxdfagjow8"
 CombatManager="*uid://dkgendfe2bj4s"
 NpcSystem="*uid://wv7vxi8cdep5"
 TransformationSystem="*uid://blgfim8yfuxnu"
+TransformationRegistry="*uid://cekfwp4yi5xqq"
 MinigameRecordSystem="*uid://886pnbqql7y0"
 
 [input]

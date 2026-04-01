@@ -4,7 +4,6 @@
 # Los .tres viven en res://data/transformations/definitions/.
 # Si no hay .tres, crea las definiciones canónicas por código (fallback).
 
-class_name TransformationRegistry
 extends Node
 
 const DEFINITIONS_PATH := "res://data/transformations/definitions/"
