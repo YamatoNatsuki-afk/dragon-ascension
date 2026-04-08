@@ -1,4 +1,4 @@
-# res://core/DayActionResult.gd
+# res://data/actions/base/DayActionResult.gd
 #
 # Resultado de ejecutar una DayAction.
 # DayManager lo consume en _resolve() para aplicar cambios al CharacterData.
@@ -32,3 +32,8 @@ extends Resource
 ## Flags que DayManager seteará en CharacterData.saved_flags al resolver.
 ## También se propagan a FlagSystem si está disponible.
 @export var flags_to_set: Array[StringName] = []
+
+## Ratio de HP del jugador al terminar la acción (0.0 = sin HP, 1.0 = HP completo).
+## Lo popula CombatEventAction (simulación) o DayManager._execute_combat (combate real).
+## DayManager._resolve() lo lee para aplicar Zenkai Boost en saiyans.
+@export var hp_ratio_at_end: float = 1.0

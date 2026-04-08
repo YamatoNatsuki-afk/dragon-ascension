@@ -115,6 +115,8 @@ func _execute_combat(action: CombatEventAction) -> void:
 
 	# Convertir el resultado del combate real a DayActionResult usando los datos del día.
 	var result: DayActionResult = action.build_result(won, _current_ctx)
+	# Sobreescribir el hp_ratio con el valor real que CombatManager capturó.
+	result.hp_ratio_at_end = CombatManager.last_combat_hp_ratio
 
 	phase = Phase.RESOLVING
 	_resolve(action, result)
@@ -300,6 +302,9 @@ func _resolve(action, result) -> void:  # action: DayAction, result: DayActionRe
 				"Verifica que FlagSystem.gd declare 'func set_flag(id, val)'."
 			)
 
+	# ── Zenkai Boost (solo saiyans) ───────────────────────────────────────────
+	_apply_zenkai_boost(result)
+
 	# ── Verificar desbloqueos de transformación ───────────────────────────────
 	# Acceso por path para no depender del Autoload siendo reconocido en parseo.
 	var transform_sys := get_node_or_null("/root/TransformationSystem")
@@ -317,6 +322,51 @@ func _resolve(action, result) -> void:  # action: DayAction, result: DayActionRe
 		_log_day(action, result)
 
 	_end_day(result)
+
+## Aplica Zenkai Boost si el personaje es saiyan y casi murió en combate.
+## Zenkai menor (HP ≤ 15%) → +5% en todos los stats base.
+## Zenkai mayor (HP ≤  5%) → +10% en todos los stats base.
+## Cap acumulable: +100% (zenkai_accumulation llega a 1.0).
+## No se aplica si no hubo acción de combate o si ya se alcanzó el cap.
+func _apply_zenkai_boost(result) -> void:  # result: DayActionResult
+	if _character_data == null or _character_data.race_id != &"saiyan":
+		return
+	if result.action_type != &"combat":
+		return
+	var hp_ratio: float = result.hp_ratio_at_end
+	var boost: float    = 0.0
+	if hp_ratio <= 0.05:
+		boost = 0.10  # Zenkai mayor
+	elif hp_ratio <= 0.15:
+		boost = 0.05  # Zenkai menor
+	else:
+		return
+
+	const ZENKAI_CAP := 1.0
+	var room: float = ZENKAI_CAP - _character_data.zenkai_accumulation
+	if room <= 0.0:
+		if enable_debug_log:
+			print("[DayManager] Zenkai: cap alcanzado (%.0f%% acumulado)." % \
+				(_character_data.zenkai_accumulation * 100.0))
+		return
+
+	boost = minf(boost, room)
+	_character_data.zenkai_accumulation += boost
+
+	for stat_id: StringName in _character_data.base_stats.keys():
+		var current: float = _character_data.base_stats.get(stat_id, 0.0)
+		_character_data.base_stats[stat_id] = StatRegistry.clamp_stat(
+			stat_id, current + current * boost
+		)
+
+	var label := "MAYOR" if boost >= 0.10 else "MENOR"
+	if enable_debug_log:
+		print("[DayManager] ✦ ZENKAI %s +%.0f%%  (total acumulado: +%.0f%%)" % [
+			label, boost * 100.0, _character_data.zenkai_accumulation * 100.0
+		])
+
+	if EventBus.has_signal("zenkai_boost_applied"):
+		EventBus.zenkai_boost_applied.emit(boost, _character_data.zenkai_accumulation)
 
 func _end_day(result) -> void:  # result: DayActionResult
 	phase = Phase.DAY_END

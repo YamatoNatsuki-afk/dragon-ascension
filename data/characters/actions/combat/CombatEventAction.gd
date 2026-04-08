@@ -16,7 +16,8 @@ func build_result(won: bool, ctx: DayContext) -> DayActionResult:
 	var day_scale   := DifficultyScaler.challenge_multiplier(ctx.day_number)
 	var enemy_power := 10.0 * day_scale * difficulty_factor
 
-	result.success = won
+	result.action_type = &"combat"
+	result.success     = won
 
 	if won:
 		result.narrative_key = &"combat.victory"
@@ -25,9 +26,10 @@ func build_result(won: bool, ctx: DayContext) -> DayActionResult:
 		var gain    := DifficultyScaler.apply_variance(0.8, 0.3, ctx.rng) * day_scale
 		result.stat_changes[primary] = snappedf(gain, 0.1)
 	else:
-		result.narrative_key = &"combat.defeat"
-		result.xp_gained     = enemy_power * 2.0
+		result.narrative_key  = &"combat.defeat"
+		result.xp_gained      = enemy_power * 2.0
 		result.flags_to_set.append(&"is_dead")
+		result.hp_ratio_at_end = 0.05  # heurística de simulación: derrota = near-death
 		result.stat_changes[&"resistencia"] = snappedf(DifficultyScaler.apply_variance(1.2, 0.2, ctx.rng), 0.1)
 		result.stat_changes[&"vitalidad"]   = snappedf(DifficultyScaler.apply_variance(0.8, 0.2, ctx.rng), 0.1)
 

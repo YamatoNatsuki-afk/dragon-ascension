@@ -21,24 +21,7 @@ func _ready() -> void:
 	call_deferred("_connect_signals")
 
 func _connect_signals() -> void:
-	var bus := _find_event_bus()
-	if bus == null:
-		push_error("[CheckpointSystem] EventBus no encontrado. " +
-			"Verifica el nombre exacto en Project Settings → Autoloads.")
-		return
-	bus.day_ended.connect(_on_day_ended)
-
-func _find_event_bus() -> Node:
-	var candidates := ["EventBus", "event_bus", "Events", "Bus", "GameEvents", "SignalBus"]
-	for cname in candidates:
-		var node := get_node_or_null("/root/" + cname)
-		if node != null and node.has_signal("day_ended"):
-			return node
-	for child in get_tree().root.get_children():
-		if child.has_signal("day_ended"):
-			print("[CheckpointSystem] EventBus encontrado como: '%s'" % child.name)
-			return child
-	return null
+	EventBus.day_ended.connect(_on_day_ended)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CARGA DE CHECKPOINTS

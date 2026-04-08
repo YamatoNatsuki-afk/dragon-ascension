@@ -1,4 +1,4 @@
-# res://core/CharacterFactory.gd
+# res://systems/CharacterFactory.gd
 #
 # Responsabilidad única: construir instancias de CharacterData válidas.
 # No contiene lógica de gameplay. No guarda estado. Solo fabrica.

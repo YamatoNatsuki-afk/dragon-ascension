@@ -124,3 +124,12 @@ signal npc_relation_changed(npc_id: StringName, old_state: int, new_state: int, 
 ## Emitida por UnlockActionConsequence cuando se desbloquea una acción de día.
 ## DayScreen puede usarla para mostrar "NUEVA ACCIÓN" al jugador.
 signal action_unlocked(action_id: StringName)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SAIYANS — MECÁNICAS RACIALES
+# ─────────────────────────────────────────────────────────────────────────────
+
+## Emitida por DayManager cuando un saiyan gana un Zenkai Boost.
+## boost: fracción aplicada (0.05 menor / 0.10 mayor).
+## total_accumulation: acumulado total sobre stats base (0.0–1.0).
+signal zenkai_boost_applied(boost: float, total_accumulation: float)

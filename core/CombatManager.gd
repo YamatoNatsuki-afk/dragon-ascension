@@ -8,10 +8,21 @@ extends Node
 
 const COMBAT_SCENE_PATH := "res://scenes/combat_arena/CombatArena.tscn"
 
-var _combat_active: bool = false
-var _combat_scene:  Node = null
+var _combat_active:       bool  = false
+var _combat_scene:        Node  = null
+
+## HP ratio del jugador al finalizar el último combate real.
+## HealthComponent o Player lo registra via set_final_hp_ratio() antes de emitir combat_ended.
+## DayManager._execute_combat() lo lee para propagar a DayActionResult.
+var last_combat_hp_ratio: float = 1.0
+
+## Llamado por HealthComponent o Player justo antes de emitir combat_ended.
+## Permite que DayManager sepa si el jugador llegó near-death.
+func set_final_hp_ratio(ratio: float) -> void:
+	last_combat_hp_ratio = clampf(ratio, 0.0, 1.0)
 
 func start_combat(difficulty: float = 1.0) -> void:
+	last_combat_hp_ratio = 1.0   # reset antes de cada combate
 	if _combat_active:
 		push_warning("CombatManager.start_combat: ya hay un combate activo.")
 		return

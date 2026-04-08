@@ -63,6 +63,12 @@ extends Resource
 ## Persistido automáticamente por SaveSystem.
 @export var minigame_records: Dictionary = {}
 
+## Bonus acumulado de Zenkai Boost (fracción del boost total aplicado, 0.0–1.0).
+## Cada Zenkai menor añade 0.05, cada Zenkai mayor añade 0.10.
+## Al llegar a 1.0 (+100% de stats base) el Zenkai no puede seguir acumulando.
+## Solo tiene efecto para personajes de raza &"saiyan".
+@export var zenkai_accumulation: float = 0.0
+
 ## Umbrales de récord ya otorgados. Clave = "minigame_id_threshold", Valor = true.
 ## Evita dar el mismo bonus dos veces en el mismo run.
 @export var minigame_milestones: Dictionary = {}

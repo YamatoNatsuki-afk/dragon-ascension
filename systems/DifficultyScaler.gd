@@ -1,4 +1,4 @@
-# core/DifficultyScaler.gd
+# res://systems/DifficultyScaler.gd
 # Utilidad estática pura — sin estado, sin nodo, sin autoload.
 # Todas las fórmulas en un solo lugar para facilitar balance.
 class_name DifficultyScaler

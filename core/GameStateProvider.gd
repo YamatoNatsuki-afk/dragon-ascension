@@ -15,7 +15,8 @@
 #
 extends Node
 
-var _character_data = null  # CharacterData
+var _character_data  = null  # CharacterData
+var _stats_component = null  # StatsComponent
 
 signal character_data_changed(data)  # CharacterData
 
@@ -44,3 +45,12 @@ func current_day() -> int:
 ## Comprueba que hay una partida activa. Útil en asserts.
 func is_active() -> bool:
 	return _character_data != null
+
+## Registrado por el nodo Player después de instanciar y configurar StatsComponent.
+## Permite que cualquier sistema acceda al componente sin buscar nodos en el árbol.
+func register_stats_component(component) -> void:  # component: StatsComponent
+	_stats_component = component
+
+## Devuelve el StatsComponent activo, o null si la escena del jugador no está cargada.
+func get_stat_component():  # → StatsComponent
+	return _stats_component
