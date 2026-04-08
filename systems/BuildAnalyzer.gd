@@ -141,7 +141,14 @@ static func _score_execution(data, profile: BuildProfile) -> float:
 
 static func _ensure_profiles_loaded() -> void:
 	if _profiles_loaded:
-		return
+		# FIX B3: En debug, invalidar el cache para reflejar cambios de .tres
+		# sin necesitar reiniciar el editor o el juego.
+		# En producción el cache es permanente para evitar lecturas de disco repetidas.
+		if OS.is_debug_build():
+			_profiles_loaded = false
+			_profiles.clear()
+		else:
+			return
 	_profiles.clear()
 
 	var dir := DirAccess.open(PROFILES_PATH)

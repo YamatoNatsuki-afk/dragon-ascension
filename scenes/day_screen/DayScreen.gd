@@ -73,30 +73,27 @@ func _ready() -> void:
 	_connect_signals()
 
 func _connect_signals() -> void:
-	var bus = _find_event_bus()
-	if bus == null:
-		push_error("DayScreen: No se encontró EventBus. " +
-			"Verifica el nombre exacto en Project Settings → Autoloads.")
-		# Debug: imprimir todos los autoloads disponibles
-		print("[DayScreen] Nodos en /root:")
-		for child in get_tree().root.get_children():
-			print("  - '%s' (%s)" % [child.name, child.get_class()])
-		return
-	bus.day_started.connect(_on_day_started)
-	bus.day_actions_ready.connect(_on_day_actions_ready)
-	bus.day_action_resolved.connect(_on_day_action_resolved)
-	bus.day_ended.connect(_on_day_ended)
-	bus.game_completed.connect(_on_game_completed)
-	if bus.has_signal("level_up"):
-		bus.level_up.connect(_on_level_up)
-	if bus.has_signal("transformation_unlocked"):
-		bus.transformation_unlocked.connect(_on_transformation_unlocked)
-	if bus.has_signal("transformation_mastery_milestone"):
-		bus.transformation_mastery_milestone.connect(_on_mastery_milestone)
-	if bus.has_signal("minigame_record_broken"):
-		bus.minigame_record_broken.connect(_on_minigame_record_broken)
-	if bus.has_signal("npc_relation_changed"):
-		bus.npc_relation_changed.connect(_on_npc_relation_changed)
+	# FIX B2: Reemplaza _find_event_bus() (búsqueda por lista de nombres candidatos)
+	# por una referencia directa al nombre canónico del Autoload.
+	# Si EventBus no existe bajo este nombre, el assert falla ruidosamente en vez de
+	# conectarse silenciosamente al nodo equivocado o no conectarse en absoluto.
+	assert(EventBus != null,
+		"DayScreen: EventBus no encontrado. Verifica Project Settings → Autoloads.")
+	EventBus.day_started.connect(_on_day_started)
+	EventBus.day_actions_ready.connect(_on_day_actions_ready)
+	EventBus.day_action_resolved.connect(_on_day_action_resolved)
+	EventBus.day_ended.connect(_on_day_ended)
+	EventBus.game_completed.connect(_on_game_completed)
+	if EventBus.has_signal("level_up"):
+		EventBus.level_up.connect(_on_level_up)
+	if EventBus.has_signal("transformation_unlocked"):
+		EventBus.transformation_unlocked.connect(_on_transformation_unlocked)
+	if EventBus.has_signal("transformation_mastery_milestone"):
+		EventBus.transformation_mastery_milestone.connect(_on_mastery_milestone)
+	if EventBus.has_signal("minigame_record_broken"):
+		EventBus.minigame_record_broken.connect(_on_minigame_record_broken)
+	if EventBus.has_signal("npc_relation_changed"):
+		EventBus.npc_relation_changed.connect(_on_npc_relation_changed)
 
 func _on_npc_relation_changed(npc_id: StringName, _old: int, new_state: int, _data) -> void:
 	var npc_sys := get_node_or_null("/root/NpcSystem")
@@ -116,24 +113,6 @@ func _on_minigame_record_broken(_id: String, _old: float, _new: float, _bonuses:
 	# La señal se emite desde MinigameRecordSystem — el banner ya lo muestra
 	# _show_record_bonus_banner. Este handler existe para extensibilidad futura.
 	_refresh_stats()
-
-func _find_event_bus() -> Node:
-	# Lista de nombres candidatos — agregar el tuyo si no está
-	var candidates := ["EventBus", "event_bus", "Events", "Bus", "GameEvents",
-		"SignalBus", "GlobalEvents", "Signals", "GameSignals"]
-	for cname in candidates:
-		var node := get_node_or_null("/root/" + cname)
-		if node != null:
-			# Encontrado por nombre — verificar que tenga la señal esperada
-			if node.has_signal("day_started") or node.has_method("emit"):
-				print("[DayScreen] EventBus encontrado: '%s'" % cname)
-				return node
-	# Búsqueda por señal — por si el nombre no está en la lista
-	for child in get_tree().root.get_children():
-		if child.has_signal("day_started"):
-			print("[DayScreen] EventBus encontrado (búsqueda): '%s'" % child.name)
-			return child
-	return null
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Construcción de UI

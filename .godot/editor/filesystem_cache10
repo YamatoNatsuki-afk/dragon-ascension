@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1775087626
+::res://::1775634048
 AUDIT_DRAGON_ASCENSION.md::TextFile::-1::1774924101::0::1::::<><><>0<>0<><>::
 balance_report.png::CompressedTexture2D::2273517430477166641::1774924102::1774941290::1::::<><><>0<>0<>e08456bb302fc7cde02e31625bb2a745<>res://.godot/imported/balance_report.png-2724df2bac102646701ed36139469ae2.ctex::
 Estructura de carpetas.txt::TextFile::-1::1774924101::0::1::::<><><>0<>0<><>::
@@ -197,8 +197,8 @@ CharacterCreationScreen.tscn::PackedScene::7732372217692783413::1774924105::0::1
 CombatArena.gd::GDScript::8796933351582780772::1775020443::0::1::::<>Node2D<><>0<>0<><>::
 CombatArena.tscn::PackedScene::8684592573561964419::1774924105::0::1::::<><><>0<>0<><>::uid://dxlkhbl80csxo::::res://scenes/combat_arena/CombatArena.gd<>uid://duun16qf4vu5c::::res://entities/player/Player.tscn<>uid://dhdlq32v5e7el::::res://entities/Enemy/Enemy.tscn
 CombatCamera.gd::GDScript::4853483233279999801::1774944463::0::1::::CombatCamera<>Camera2D<><>0<>0<><>::
-::res://scenes/day_screen/::1775085381
-DayScreen.gd::GDScript::2859265181489906929::1774924105::0::1::::DayScreen<>Control<><>0<>0<><>::
+::res://scenes/day_screen/::1775634030
+DayScreen.gd::GDScript::2859265181489906929::1775634030::0::1::::DayScreen<>Control<><>0<>0<><>::
 DayScreen.tscn::PackedScene::-1::1774924105::0::1::::<><><>0<>0<><>::res://scenes/day_screen/DayScreen.gd
 ::res://scenes/minigames/::1775085381
 AppleMinigame.gd::GDScript::401524509553167213::1774924105::0::1::::AppleMinigame<>Control<><>0<>0<><>::
@@ -212,13 +212,13 @@ TrainingMinigame.gd::GDScript::8725983152374606541::1774924105::0::1::::Training
 ::res://scenes/training_ground/::1775085381
 TrainingGround.gd::GDScript::2634875555553229341::1774924105::0::1::::<>Node<><>0<>0<><>::
 TrainingGround.tscn::PackedScene::8735017627581491051::1774924105::0::1::::<><><>0<>0<><>::uid://bdsmar332ahnx::::res://scenes/training_ground/TrainingGround.gd
-::res://systems/::1775085997
-BuildAnalyzer.gd::GDScript::2850055535739299636::1774924105::0::1::::BuildAnalyzer<>RefCounted<><>0<>0<><>::
+::res://systems/::1775634045
+BuildAnalyzer.gd::GDScript::2850055535739299636::1775634045::0::1::::BuildAnalyzer<>RefCounted<><>0<>0<><>::
 CharacterFactory.gd::GDScript::8926136804323304793::1775085994::0::1::::CharacterFactory<>RefCounted<><>0<>0<><>::
 CheckpointResult.gd::GDScript::3356526124932707850::1774924105::0::1::::CheckpointResult<>RefCounted<><>0<>0<><>::
 CombatFormulas.gd::GDScript::4156092539555558040::1774925705::0::1::::CombatFormulas<>RefCounted<><>0<>0<><>::
 DifficultyScaler.gd::GDScript::2106685580221931854::1775085997::0::1::::DifficultyScaler<>RefCounted<><>0<>0<><>::
-PerformanceEvaluator.gd::GDScript::8039921215277094962::1774924105::0::1::::PerformanceEvaluator<>RefCounted<><>0<>0<><>::
+PerformanceEvaluator.gd::GDScript::8039921215277094962::1775633998::0::1::::PerformanceEvaluator<>RefCounted<><>0<>0<><>::
 ::res://systems/actions/::1774650142
 ::res://ui/::1775085381
 hud.tscn::PackedScene::3431681975456932477::1774924105::0::1::::<><><>0<>0<><>::

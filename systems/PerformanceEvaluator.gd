@@ -16,7 +16,25 @@ const LOW_THRESHOLD           := 0.75
 # ─────────────────────────────────────────────
 
 ## Power score ponderado por el build del personaje.
+## Alias de compute_identity_score() — mantenido por compatibilidad.
 static func compute_power_score(data) -> float:  # data: CharacterData
+	return compute_identity_score(data)
+
+## FIX M2: Score de PROGRESIÓN — suma de todos los stats con peso neutro (1.0).
+## Mide cuánto stat total acumuló el personaje, independientemente del build.
+## Usar en checkpoints bloqueantes: es justo para todos los builds y no penaliza
+## al jugador que cambia de especialización sin respec.
+static func compute_progression_score(data) -> float:  # data: CharacterData
+	var score: float = 0.0
+	for val: float in data.base_stats.values():
+		score += val
+	return score
+
+## FIX M2: Score de IDENTIDAD — pondera los stats por el build actual del personaje.
+## Mide qué tan bien ejecutó el jugador SU build elegido.
+## Puede caer si el jugador cambia de build sin respec, aunque los stats reales no bajen.
+## Solo usar para feedback narrativo, no para checkpoints bloqueantes.
+static func compute_identity_score(data) -> float:  # data: CharacterData
 	var weights: Dictionary = data.build.stat_priority_weights
 	var score: float = 0.0
 	for stat_id: StringName in data.base_stats.keys():
